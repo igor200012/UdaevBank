@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#050505">
+    <title>UdaevBank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root { --bg: #050505; --text: #e0e0e0; --text-secondary: #777; --accent: #e60000; --border: #1a1a1a; --blue: #3399ff; --green: #34c759; --carbon: #0d0d0d; --gold: #ffaa00; --safe-bottom: env(safe-area-inset-bottom, 0px); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+        body { font-family: 'Roboto', -apple-system, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+        .header { background: #080808; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; border-bottom: 1px solid var(--border); }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .logo { width: 34px; height: 34px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 15px; }
+        .logo-text { font-size: 17px; font-weight: 700; }
+        .dev-badge { background: var(--gold); color: #000; font-size: 8px; padding: 2px 7px; border-radius: 8px; font-weight: 700; margin-left: 6px; display: none; }
+        .header-right { display: flex; gap: 6px; align-items: center; }
+        .header-btn { width: 34px; height: 34px; border-radius: 50%; background: #0a0a0a; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); font-size: 16px; }
+        .main-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px; padding-bottom: 80px; max-width: 500px; margin: 0 auto; width: 100%; }
+        @media (min-width: 768px) { .main-content { max-width: 600px; padding: 20px; } .card-balance { font-size: 42px; } .quick-row { gap: 12px; } }
+        @media (min-width: 1024px) { .main-content { max-width: 700px; } }
+        .card-full { background: linear-gradient(135deg, #0a0a1a, #0a1026, #061230); border-radius: 20px; padding: 20px; color: #fff; margin-bottom: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.03); position: relative; }
+        .card-badge { position: absolute; top: 14px; right: 16px; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 12px; font-size: 10px; }
+        .card-balance-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; }
+        .card-balance { font-size: 32px; font-weight: 700; margin: 2px 0 12px; }
+        .card-balance span { font-size: 15px; font-weight: 400; opacity: 0.7; }
+        .card-number { font-size: 13px; letter-spacing: 2px; opacity: 0.8; font-family: 'Courier New', monospace; }
+        .card-footer { display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 4px; }
+        .quick-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+        .quick-btn { background: var(--carbon); border-radius: 14px; padding: 12px 4px; text-align: center; cursor: pointer; border: 1px solid var(--border); transition: transform 0.1s, background 0.1s; }
+        .quick-btn:active { transform: scale(0.95); background: #1a1a1a; }
+        .quick-btn .material-icons { font-size: 22px; color: var(--accent); margin-bottom: 4px; display: block; }
+        .quick-btn span { font-size: 9px; font-weight: 500; display: block; }
+        .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin: 14px 0 8px; }
+        .list-item { background: var(--carbon); border-radius: 14px; padding: 12px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid var(--border); transition: border-color 0.1s, background 0.1s; }
+        .list-item:active { border-color: var(--accent); background: #1a1a1a; }
+        .li-icon { width: 34px; height: 34px; border-radius: 10px; background: #050505; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent); }
+        .li-icon .material-icons { font-size: 18px; } .li-info { flex: 1; min-width: 0; } .li-name { font-size: 13px; font-weight: 500; } .li-sub { font-size: 10px; color: var(--text-secondary); }
+        .li-amount { font-size: 14px; font-weight: 600; text-align: right; white-space: nowrap; } .li-amount.plus { color: var(--green); } .li-amount.minus { color: var(--accent); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #080808; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(5, 1fr); padding: 5px 0; padding-bottom: calc(5px + var(--safe-bottom)); z-index: 100; }
+        @media (min-width: 768px) { .bottom-nav { max-width: 600px; left: 50%; transform: translateX(-50%); border-radius: 15px 15px 0 0; } }
+        @media (min-width: 1024px) { .bottom-nav { max-width: 700px; } }
+        .nav-item { text-align: center; cursor: pointer; padding: 3px 1px; color: var(--text-secondary); background: none; border: none; font-family: inherit; font-size: 8px; }
+        .nav-item .material-icons { font-size: 20px; display: block; margin: 0 auto 1px; } .nav-item.active { color: var(--accent); }
+        .page { display: none; } .page.active { display: block; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+        .modal-sheet { background: #0d0d0d; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 18px; max-height: 80vh; overflow-y: auto; border-top: 2px solid var(--accent); animation: slideUp 0.3s ease-out; }
+        @media (min-width: 768px) { .modal-overlay { align-items: center; } .modal-sheet { border-radius: 20px; max-height: 90vh; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-handle { width: 32px; height: 3px; background: var(--border); border-radius: 2px; margin: 0 auto 14px; }
+        .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 14px; text-align: center; }
+        .input-group { margin-bottom: 12px; } .input-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; }
+        .input-field { width: 100%; padding: 12px; background: #050505; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; color: var(--text); outline: none; font-family: inherit; -webkit-appearance: none; }
+        .input-field:focus { border-color: var(--accent); }
+        .input-row { display: flex; gap: 8px; } .input-row .input-group { flex: 1; }
+        .input-hint { font-size: 10px; color: var(--accent); margin-top: 3px; }
+        .btn { width: 100%; padding: 13px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 6px; font-family: inherit; transition: transform 0.1s, opacity 0.1s; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        .btn-primary { background: var(--accent); color: #fff; } .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+        .btn-danger { background: transparent; color: #ff4444; border: 1px solid #ff4444; } .btn-blue { background: var(--blue); color: #fff; } .btn-green { background: var(--green); color: #fff; }
+        .btn-gold { background: linear-gradient(135deg, #ffaa00, #ff8800); color: #000; font-weight: 700; }
+        .btn-max-buy { background: transparent; color: var(--green); border: 2px solid var(--green); }
+        .btn-max-sell { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
+        .tab-bar { display: flex; gap: 6px; margin-bottom: 12px; }
+        .tab-btn { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border); background: var(--carbon); color: var(--text); cursor: pointer; font-weight: 600; font-size: 12px; text-align: center; font-family: inherit; }
+        .tab-btn.active { background: var(--accent); color: #fff; }
+        .detail-row { background: #050505; border-radius: 10px; padding: 12px; margin-bottom: 5px; }
+        .analytics-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+        .analytics-card { background: var(--carbon); border-radius: 12px; padding: 12px; text-align: center; border: 1px solid var(--border); }
+        .analytics-card .card-value { font-size: 16px; font-weight: 700; }
+        .analytics-card .card-label { font-size: 9px; color: var(--text-secondary); }
+        .income-green { color: var(--green); } .income-red { color: var(--accent); }
+        .available-balance { background: #080808; border-radius: 10px; padding: 10px; margin-bottom: 10px; text-align: center; border: 1px solid #1a1a1a; }
+        .avail-label { font-size: 9px; color: var(--text-secondary); text-transform: uppercase; }
+        .avail-amount { font-size: 16px; font-weight: 700; color: var(--green); margin-top: 3px; }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 12px; z-index: 2000; border: 1px solid var(--accent); animation: fadeIn 0.3s; pointer-events: none; white-space: nowrap; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .profile-phone { background: #080808; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--border); margin-bottom: 10px; }
+        .profile-phone .phone-number { font-size: 18px; font-weight: 700; color: var(--green); letter-spacing: 1px; }
+        .profile-phone .phone-label { font-size: 9px; color: var(--text-secondary); text-transform: uppercase; }
+        .limit-info { background: #0a0a0a; border-radius: 8px; padding: 8px 12px; margin: 8px 0; font-size: 10px; color: var(--text-secondary); text-align: center; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <div class="logo">UB</div>
+        <div class="logo-text">UdaevBank</div>
+        <span class="dev-badge" id="devBadge">DEV</span>
+    </div>
+    <div class="header-right">
+        <div class="header-btn" onclick="showProfile()"><span class="material-icons">person</span></div>
+    </div>
+</div>
+
+<div class="main-content" id="mainContent">
+
+<div class="page active" id="pageLogin" style="display:flex;align-items:center;justify-content:center;min-height:70vh;">
+    <div style="width:100%;max-width:340px;text-align:center;padding:20px;">
+        <div style="font-size:50px;margin-bottom:12px;">🏦</div>
+        <h2 style="margin-bottom:4px;">UdaevBank</h2>
+        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:20px;">👋 Create account to continue</p>
+        <div class="input-group">
+            <div class="input-label">👤 Your Name</div>
+            <input class="input-field" id="regName" placeholder="Enter your name" maxlength="20" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" onclick="register()">🚀 Create Account</button>
+        <p style="color:var(--text-secondary);font-size:10px;margin-top:12px;">📱 Phone number issued automatically</p>
+    </div>
+</div>
+
+<div class="page" id="pageHome">
+    <div class="card-full" onclick="showCardDetail()">
+        <div class="card-badge">💳 RUB</div>
+        <div class="card-balance-label">💰 Main Balance</div>
+        <div class="card-balance" id="mainBalance">0 <span>RUB</span></div>
+        <div class="card-number" id="cardNumberDisplay">···· ···· ···· ····</div>
+        <div class="card-footer"><span>Mastercard</span><span id="phoneDisplay">📱 +7···</span></div>
+    </div>
+    <div class="quick-row">
+        <div class="quick-btn" onclick="openTransfer()"><span class="material-icons">arrow_forward</span><span>💸 Transfer</span></div>
+        <div class="quick-btn" onclick="openTopUp()"><span class="material-icons">add</span><span>⬆️ Top Up</span></div>
+        <div class="quick-btn" onclick="showPage('analytics')"><span class="material-icons">analytics</span><span>📊 Stats</span></div>
+        <div class="quick-btn" onclick="showPage('history')"><span class="material-icons">receipt_long</span><span>📋 History</span></div>
+    </div>
+    <div class="section-title">🕐 Recent</div>
+    <div id="historyMini"></div>
+</div>
+
+<div class="page" id="pageHistory"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">📋 History</div><div id="fullHistoryList"></div></div>
+
+<div class="page" id="pageAnalytics"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">📊 Analytics</div><div class="analytics-summary" id="analyticsSummary"></div><div class="section-title">📝 Details</div><div id="detailedAnalytics"></div></div>
+
+<div class="page" id="pageCrypto"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">₿ Crypto</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('crypto','market')">📈 Market</button><button class="tab-btn" onclick="switchTab('crypto','my')">💼 My</button></div><div id="cryptoMarket"></div><div id="cryptoMy" style="display:none;"></div></div>
+
+<div class="page" id="pageForex"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">💱 Forex</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('forex','market')">📈 Market</button><button class="tab-btn" onclick="switchTab('forex','my')">💼 My</button></div><div id="forexMarket"></div><div id="forexMy" style="display:none;"></div></div>
+
+<div class="page" id="pageDeposits"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">🏦 Deposits</div><div class="section-title">💼 My Deposits</div><div id="myDepositsList"></div><div class="section-title">➕ Open New</div><div id="depositTypesList"></div><div class="list-item" onclick="showPage('metals')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">💎 Metals</div><div class="li-sub">Gold, Silver, Platinum, Palladium</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div></div>
+
+<div class="page" id="pageMetals"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">💎 Metals</div><div id="metalsList"></div><div class="section-title">💼 My Metals</div><div id="myMetalsList"></div></div>
+
+<div class="page" id="pageInvest"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">📈 Stocks</div><div id="stocksList"></div><div class="section-title">💼 My Stocks</div><div id="myStocksList"></div></div>
+
+<div class="page" id="pagePortfolio"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">💼 Portfolio</div><div id="portfolioContent"></div></div>
+
+<div class="page" id="pageVitrina"><div onclick="goBack()" style="cursor:pointer;font-size:22px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">🏪 Products</div><div class="list-item" onclick="showPage('deposits')"><div class="li-icon"><span class="material-icons">savings</span></div><div class="li-info"><div class="li-name">🏦 Deposits</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('forex')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">💱 Forex</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('crypto')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">₿ Crypto</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('invest')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">📈 Stocks</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('metals')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">💎 Metals</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('portfolio')"><div class="li-icon"><span class="material-icons">account_balance</span></div><div class="li-info"><div class="li-name">💼 Portfolio</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div></div>
+
+</div>
+
+<div class="bottom-nav" id="bottomNav" style="display:none;">
+    <button class="nav-item active" onclick="showPage('home')"><span class="material-icons">home</span>🏠 Home</button>
+    <button class="nav-item" onclick="showPage('crypto')"><span class="material-icons">currency_bitcoin</span>₿ Crypto</button>
+    <button class="nav-item" onclick="showPage('forex')"><span class="material-icons">language</span>💱 Forex</button>
+    <button class="nav-item" onclick="showPage('deposits')"><span class="material-icons">savings</span>🏦 Deposits</button>
+    <button class="nav-item" onclick="showPage('vitrina')"><span class="material-icons">storefront</span>🏪 Products</button>
+</div>
+
+<script>
+// Developer code - encoded (only you know: Igor2009)
+var _d = atob('SWdvcjIwMDk=');
+
+var isLoggedIn = false;
+var isDeveloper = false;
+var balance = 0;
+var phoneNumber = '';
+var cardNumber = '';
+var playerName = '';
+var hasSubscription = false;
+var dailyTopUpCount = 0;
+var dailyTopUpReset = '';
+var dailyTransferCount = 0;
+var dailyTransferReset = '';
+var historyData = [];
+var depositAccounts = [];
+var cryptoHoldings = {};
+var forexHoldings = {};
+var metalHoldings = {};
+var stockHoldings = {};
+var pageHistory = ['home'];
+var assetPriceHistory = {};
+var monthPassed = 0;
+var maxDailyTopUp = 10000;
+var maxDailyTransfers = 10000;
+
+var METAL_PRICES = {Gold:5800,Silver:75,Platinum:3200,Palladium:4500};
+var cryptoListData = [{symbol:'BTC',name:'Bitcoin',price:4500000,change:2.3},{symbol:'ETH',name:'Ethereum',price:280000,change:-1.2},{symbol:'USDT',name:'Tether',price:90,change:0.01},{symbol:'BNB',name:'BNB',price:35000,change:0.8},{symbol:'XRP',name:'Ripple',price:55,change:3.1},{symbol:'ADA',name:'Cardano',price:45,change:-0.5},{symbol:'SOL',name:'Solana',price:16000,change:5.2},{symbol:'DOGE',name:'Dogecoin',price:15,change:-2.1}];
+var forexListData = [{symbol:'USD',name:'US Dollar',price:90},{symbol:'EUR',name:'Euro',price:98},{symbol:'GBP',name:'Pound',price:114},{symbol:'CHF',name:'Franc',price:102},{symbol:'JPY',name:'Yen',price:0.6},{symbol:'CNY',name:'Yuan',price:12.5}];
+var depositTypes = [{id:0,name:'Basic',rate:12,desc:'Flexible withdrawal'},{id:1,name:'Fixed',rate:20,desc:'Locked 6 months'},{id:2,name:'Premium',rate:14,desc:'VIP only'}];
+var stockListData = [{symbol:'UDAEV',name:'UdaevBank',price:8000,change:5.2},{symbol:'SBER',name:'Sberbank',price:270,change:1.5},{symbol:'GAZP',name:'Gazprom',price:165,change:-0.8},{symbol:'LKOH',name:'Lukoil',price:6800,change:2.1},{symbol:'YNDX',name:'Yandex',price:4200,change:-1.3}];
+var allUsers = {};
+
+function init(){
+    var saved = localStorage.getItem('ub_data');
+    if(saved){
+        var data = JSON.parse(saved);
+        isLoggedIn = true;
+        playerName = data.playerName;
+        phoneNumber = data.phoneNumber;
+        cardNumber = data.cardNumber;
+        balance = data.balance;
+        historyData = data.historyData || [];
+        depositAccounts = data.depositAccounts || [];
+        cryptoHoldings = data.cryptoHoldings || {};
+        forexHoldings = data.forexHoldings || {};
+        metalHoldings = data.metalHoldings || {};
+        stockHoldings = data.stockHoldings || {};
+        assetPriceHistory = data.assetPriceHistory || {};
+        isDeveloper = data.isDeveloper || false;
+        hasSubscription = data.hasSubscription || false;
+        dailyTopUpCount = data.dailyTopUpCount || 0;
+        dailyTopUpReset = data.dailyTopUpReset || '';
+        dailyTransferCount = data.dailyTransferCount || 0;
+        dailyTransferReset = data.dailyTransferReset || '';
+        monthPassed = data.monthPassed || 0;
+        checkDailyReset();
+        showApp();
+    }
+    var all = localStorage.getItem('ub_users');
+    if(all) allUsers = JSON.parse(all);
+}
+
+function generatePhone(){
+    var num = '+7';
+    for(var i=0;i<10;i++) num += Math.floor(Math.random()*10);
+    if(allUsers[num]) return generatePhone();
+    return num;
+}
+
+function generateCard(){
+    var card = '';
+    for(var i=0;i<16;i++){ card += Math.floor(Math.random()*10); if(i%4===3&&i<15) card += ' '; }
+    return card;
+}
+
+function register(){
+    var name = document.getElementById('regName').value.trim();
+    if(!name){ showToast('⚠️ Enter your name'); return; }
+    playerName = name;
+    phoneNumber = generatePhone();
+    cardNumber = generateCard();
+    balance = 50000;
+    historyData = [{name:'🎁 Welcome bonus',amount:50000,type:'plus',date:new Date().toLocaleDateString(),currency:'RUB'}];
+    isLoggedIn = true;
+    allUsers[phoneNumber] = {name:playerName,phone:phoneNumber,card:cardNumber};
+    localStorage.setItem('ub_users',JSON.stringify(allUsers));
+    saveData();
+    showApp();
+}
+
+function showApp(){
+    document.getElementById('pageLogin').classList.remove('active');
+    document.getElementById('pageHome').classList.add('active');
+    document.getElementById('bottomNav').style.display = 'grid';
+    if(isDeveloper) document.getElementById('devBadge').style.display = 'inline';
+    updateUI();
+    showToast('👋 Welcome, '+playerName+'!');
+}
+
+function saveData(){
+    var data = {
+        playerName:playerName, phoneNumber:phoneNumber, cardNumber:cardNumber,
+        balance:balance, historyData:historyData, depositAccounts:depositAccounts,
+        cryptoHoldings:cryptoHoldings, forexHoldings:forexHoldings,
+        metalHoldings:metalHoldings, stockHoldings:stockHoldings,
+        assetPriceHistory:assetPriceHistory, isDeveloper:isDeveloper,
+        hasSubscription:hasSubscription, dailyTopUpCount:dailyTopUpCount,
+        dailyTopUpReset:dailyTopUpReset, dailyTransferCount:dailyTransferCount,
+        dailyTransferReset:dailyTransferReset, monthPassed:monthPassed
+    };
+    localStorage.setItem('ub_data',JSON.stringify(data));
+}
+
+function checkDailyReset(){
+    var today = new Date().toDateString();
+    if(dailyTopUpReset !== today){ dailyTopUpCount = 0; dailyTopUpReset = today; }
+    if(dailyTransferReset !== today){ dailyTransferCount = 0; dailyTransferReset = today; }
+    saveData();
+}
+
+function addHistory(n,a,t,c,icon){
+    historyData.push({name:n,amount:a,type:t,date:new Date().toLocaleDateString(),currency:c||'RUB',icon:icon||''});
+    saveData(); updateUI();
+}
+
+function showToast(msg){
+    var t=document.createElement('div');t.className='toast';t.textContent=msg;
+    document.body.appendChild(t);setTimeout(function(){t.remove();},2000);
+}
+
+function showPage(p,skipHistory){
+    if(!isLoggedIn) return;
+    if(!skipHistory){if(pageHistory[pageHistory.length-1]!==p)pageHistory.push(p);}
+    document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});
+    var m={home:'pageHome',history:'pageHistory',analytics:'pageAnalytics',crypto:'pageCrypto',
+           forex:'pageForex',deposits:'pageDeposits',metals:'pageMetals',invest:'pageInvest',
+           portfolio:'pagePortfolio',vitrina:'pageVitrina'};
+    var el=document.getElementById(m[p]);if(el)el.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(function(x){x.classList.remove('active');});
+    updateUI();
+}
+
+function goBack(){if(pageHistory.length>1){pageHistory.pop();showPage(pageHistory[pageHistory.length-1],true);}else{showPage('home',true);}}
+function switchTab(s,t){document.getElementById(s+'Market').style.display=t==='market'?'block':'none';document.getElementById(s+'My').style.display=t==='my'?'block':'none';}
+
+function canTopUp(amount){
+    checkDailyReset();
+    if(isDeveloper) return true;
+    if(dailyTopUpCount + amount > maxDailyTopUp){ showToast('⚠️ Daily limit: '+maxDailyTopUp.toLocaleString()+' RUB'); return false; }
+    return true;
+}
+
+function canTransfer(amount){
+    checkDailyReset();
+    if(isDeveloper) return true;
+    if(dailyTransferCount + amount > maxDailyTransfers){ showToast('⚠️ Daily transfer limit: '+maxDailyTransfers.toLocaleString()+' RUB'); return false; }
+    return true;
+}
+
+function getExpectedMonthlyIncome(){
+    var total = 0;
+    depositAccounts.forEach(function(d){total += Math.floor(d.amount * d.rate / 12 / 100);});
+    return total;
+}
+
+function getAssetGrowthIncome(){
+    var total = 0;
+    for(var s in cryptoHoldings){if(cryptoHoldings[s]>0){var c=cryptoListData.find(function(x){return x.symbol===s;});if(c&&assetPriceHistory['crypto_'+s])total+=(c.price-assetPriceHistory['crypto_'+s])*cryptoHoldings[s];}}
+    for(var s in forexHoldings){if(forexHoldings[s]>0){var f=forexListData.find(function(x){return x.symbol===s;});if(f&&assetPriceHistory['forex_'+s])total+=(f.price-assetPriceHistory['forex_'+s])*forexHoldings[s];}}
+    for(var n in metalHoldings){if(metalHoldings[n]>0&&assetPriceHistory['metal_'+n])total+=(METAL_PRICES[n]-assetPriceHistory['metal_'+n])*metalHoldings[n];}
+    for(var s in stockHoldings){if(stockHoldings[s]>0){var st=stockListData.find(function(x){return x.symbol===s;});if(st&&assetPriceHistory['stock_'+s])total+=(st.price-assetPriceHistory['stock_'+s])*stockHoldings[s];}}
+    return Math.round(total);
+}
+
+function getTotalAssets(){
+    var total=balance;
+    for(var s in cryptoHoldings){var c=cryptoListData.find(function(x){return x.symbol===s;});if(c)total+=cryptoHoldings[s]*c.price;}
+    for(var s in forexHoldings){var f=forexListData.find(function(x){return x.symbol===s;});if(f)total+=forexHoldings[s]*f.price;}
+    for(var n in metalHoldings)total+=metalHoldings[n]*METAL_PRICES[n];
+    for(var i=0;i<depositAccounts.length;i++)total+=depositAccounts[i].amount;
+    for(var s in stockHoldings){var st=stockListData.find(function(x){return x.symbol===s;});if(st)total+=stockHoldings[s]*st.price;}
+    return total;
+}
+
+function passMonth(){
+    monthPassed++;
+    cryptoListData.forEach(function(c){c.price=Math.round(c.price*(1+(Math.random()-0.5)*0.2));c.change=parseFloat((c.change+(Math.random()-0.5)*8).toFixed(1));});
+    forexListData.forEach(function(f){f.price=parseFloat((f.price*(1+(Math.random()-0.5)*0.08)).toFixed(2));});
+    stockListData.forEach(function(s){s.price=Math.round(s.price*(1+(Math.random()-0.5)*0.15));s.change=parseFloat((s.change+(Math.random()-0.5)*10).toFixed(1));});
+    Object.keys(METAL_PRICES).forEach(function(k){METAL_PRICES[k]=Math.round(METAL_PRICES[k]*(1+(Math.random()-0.5)*0.1));});
+    var totalInt=0;
+    depositAccounts.forEach(function(d){var interest=Math.floor(d.amount*d.rate/12/100);if(!d.history)d.history=[];d.history.push({date:new Date().toLocaleDateString(),amount:interest});balance+=interest;totalInt+=interest;});
+    if(totalInt>0)addHistory('💰 Deposit interest',totalInt,'plus','RUB');
+    saveData(); showToast('📅 Month passed! Prices updated.'); updateUI();
+}
+</script>
+
+<script>
+function updateUI(){
+    if(!isLoggedIn) return;
+    document.getElementById('mainBalance').innerHTML=balance.toLocaleString()+' <span>RUB</span>';
+    document.getElementById('cardNumberDisplay').textContent=cardNumber;
+    document.getElementById('phoneDisplay').textContent='📱 '+phoneNumber;
+    if(isDeveloper) document.getElementById('devBadge').style.display = 'inline';
+    
+    var hm=document.getElementById('historyMini');
+    if(hm){var recent=historyData.slice(-3).reverse();
+    hm.innerHTML=recent.map(function(h){return '<div class="list-item"><div class="li-icon"><span class="material-icons">'+(h.type==='plus'?'arrow_downward':'arrow_upward')+'</span></div><div class="li-info"><div class="li-name">'+h.name+'</div><div class="li-sub">'+h.date+'</div></div><div class="li-amount '+(h.type==='plus'?'plus':'minus')+'">'+(h.type==='plus'?'+':'-')+h.amount.toLocaleString()+' '+h.currency+'</div></div>';}).join('')+'<div style="padding:10px;text-align:center;color:var(--accent);cursor:pointer;" onclick="showPage(\'history\')">📋 Show all history</div>';}
+    
+    var fhl=document.getElementById('fullHistoryList');
+    if(fhl)fhl.innerHTML=historyData.slice().reverse().map(function(h){return '<div class="list-item"><div class="li-icon"><span class="material-icons">'+(h.type==='plus'?'arrow_downward':'arrow_upward')+'</span></div><div class="li-info"><div class="li-name">'+h.name+'</div><div class="li-sub">'+h.date+'</div></div><div class="li-amount '+(h.type==='plus'?'plus':'minus')+'">'+(h.type==='plus'?'+':'-')+h.amount.toLocaleString()+' '+h.currency+'</div></div>';}).join('')||'<p style="text-align:center;color:var(--text-secondary);">📭 No operations yet</p>';
+    
+    var totalInc=0,totalExp=0;historyData.forEach(function(h){if(h.type==='plus')totalInc+=h.amount;else totalExp+=h.amount;});
+    var growthInc=getAssetGrowthIncome();var monthlyInc=getExpectedMonthlyIncome();
+    var summary=document.getElementById('analyticsSummary');
+    if(summary)summary.innerHTML='<div class="analytics-card"><div class="card-value income-green">📈 +'+totalInc.toLocaleString()+'</div><div class="card-label">Total Earned</div></div><div class="analytics-card"><div class="card-value '+(growthInc>=0?'income-green':'income-red')+'">'+(growthInc>=0?'📈 +':'📉 ')+growthInc.toLocaleString()+'</div><div class="card-label">Asset Growth</div></div><div class="analytics-card"><div class="card-value income-green">💰 +'+monthlyInc.toLocaleString()+'</div><div class="card-label">Deposits/mo</div></div><div class="analytics-card"><div class="card-value">💎 '+getTotalAssets().toLocaleString()+'</div><div class="card-label">Total Assets</div></div>';
+    
+    var da=document.getElementById('detailedAnalytics');
+    if(da)da.innerHTML='<div class="detail-row"><p>📈 Earned: <span style="color:#34c759;">+'+totalInc.toLocaleString()+' RUB</span></p></div><div class="detail-row"><p>📉 Spent: <span style="color:#e60000;">-'+totalExp.toLocaleString()+' RUB</span></p></div><div class="detail-row"><p>📊 Asset change: <span style="color:'+(growthInc>=0?'#34c759':'#e60000')+';">'+(growthInc>=0?'+':'')+growthInc.toLocaleString()+' RUB</span></p></div><div class="detail-row"><p>💰 Deposits/mo: <span style="color:#34c759;">+'+monthlyInc.toLocaleString()+' RUB</span></p></div>';
+    
+    var cm=document.getElementById('cryptoMarket');if(cm)cm.innerHTML=cryptoListData.map(function(c){return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\''+c.symbol+'\')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">₿ '+c.symbol+'</div><div class="li-sub">'+c.price.toLocaleString()+' RUB | '+(c.change>=0?'📈 +':'📉 ')+c.change+'%</div></div></div>';}).join('');
+    var cmy=document.getElementById('cryptoMy');if(cmy){var owned=Object.entries(cryptoHoldings).filter(function(e){return e[1]>0;});cmy.innerHTML=owned.length>0?owned.map(function(e){var c=cryptoListData.find(function(x){return x.symbol===e[0];});return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\''+e[0]+'\')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">₿ '+e[0]+'</div><div class="li-sub">'+e[1].toFixed(4)+' | '+(e[1]*(c?c.price:0)).toLocaleString()+' RUB</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--text-secondary);">📭 No crypto</p>';}
+    
+    var fm=document.getElementById('forexMarket');if(fm)fm.innerHTML=forexListData.map(function(f){return '<div class="list-item" onclick="showAssetDetail(\'forex\',\''+f.symbol+'\')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">💱 '+f.symbol+'</div><div class="li-sub">'+f.price.toFixed(2)+' RUB</div></div></div>';}).join('');
+    var fmy=document.getElementById('forexMy');if(fmy){var of=Object.entries(forexHoldings).filter(function(e){return e[1]>0;});fmy.innerHTML=of.length>0?of.map(function(e){return '<div class="list-item" onclick="showAssetDetail(\'forex\',\''+e[0]+'\')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">💱 '+e[0]+'</div><div class="li-sub">'+e[1].toFixed(2)+' | '+(e[1]*(forexListData.find(function(x){return x.symbol===e[0];})||{price:0}).price).toLocaleString()+' RUB</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--text-secondary);">📭 No forex</p>';}
+    
+    var mdl=document.getElementById('myDepositsList');if(mdl)mdl.innerHTML=depositAccounts.length>0?depositAccounts.map(function(d,i){var mi=Math.floor(d.amount*d.rate/12/100);return '<div class="list-item" onclick="showDepositDetail('+i+')"><div class="li-icon"><span class="material-icons">savings</span></div><div class="li-info"><div class="li-name">🏦 '+d.type+'</div><div class="li-sub">'+d.amount.toLocaleString()+' RUB | '+d.rate+'% | 💰 +'+mi.toLocaleString()+'/mo</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--text-secondary);">📭 No deposits</p>';
+    var dtl=document.getElementById('depositTypesList');if(dtl)dtl.innerHTML=depositTypes.map(function(d,i){return '<div class="list-item" onclick="openDepositType('+i+')"><div class="li-icon"><span class="material-icons">add_circle</span></div><div class="li-info"><div class="li-name">➕ '+d.name+'</div><div class="li-sub">'+d.rate+'% | '+d.desc+'</div></div></div>';}).join('');
+    
+    var ml=document.getElementById('metalsList');if(ml)ml.innerHTML=Object.entries(METAL_PRICES).map(function(e){return '<div class="list-item" onclick="showAssetDetail(\'metal\',\''+e[0]+'\')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">💎 '+e[0]+'</div><div class="li-sub">'+e[1].toLocaleString()+' RUB/g | Own: '+(metalHoldings[e[0]]||0).toFixed(1)+' g</div></div></div>';}).join('');
+    var mml=document.getElementById('myMetalsList');if(mml){var om=Object.entries(metalHoldings).filter(function(e){return e[1]>0;});mml.innerHTML=om.length>0?om.map(function(e){return '<div class="list-item" onclick="showAssetDetail(\'metal\',\''+e[0]+'\')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">💎 '+e[0]+'</div><div class="li-sub">'+e[1].toFixed(1)+' g | '+(e[1]*METAL_PRICES[e[0]]).toLocaleString()+' RUB</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--text-secondary);">📭 No metals</p>';}
+    
+    var sl=document.getElementById('stocksList');if(sl)sl.innerHTML=stockListData.map(function(s){return '<div class="list-item" onclick="tradeStock(\''+s.symbol+'\')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">📈 '+s.symbol+'</div><div class="li-sub">'+s.price.toLocaleString()+' RUB | '+(s.change>=0?'📈 +':'📉 ')+s.change+'%</div></div></div>';}).join('');
+    var msl=document.getElementById('myStocksList');if(msl){var os=Object.entries(stockHoldings).filter(function(e){return e[1]>0;});msl.innerHTML=os.length>0?os.map(function(e){var s=stockListData.find(function(x){return x.symbol===e[0];});return '<div class="list-item" onclick="tradeStock(\''+e[0]+'\')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">📈 '+e[0]+'</div><div class="li-sub">'+e[1]+' pcs | '+(e[1]*(s?s.price:0)).toLocaleString()+' RUB</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--text-secondary);">📭 No stocks</p>';}
+    
+    var pc=document.getElementById('portfolioContent');
+    if(pc){var totalPF=getTotalAssets();pc.innerHTML='<div class="detail-row"><p style="color:var(--text-secondary);">💎 Total Value</p><p style="font-size:22px;font-weight:700;">'+totalPF.toLocaleString()+' RUB</p></div><div class="list-item"><div class="li-icon"><span class="material-icons">home</span></div><div class="li-info"><div class="li-name">🏠 RUB Account</div></div><div class="li-amount plus">💰 '+balance.toLocaleString()+' RUB</div></div>';}
+}
+
+function showCardDetail(){
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">💳 RUB Account</div><div class="profile-phone"><div class="phone-label">📱 Phone Number</div><div class="phone-number">'+phoneNumber+'</div></div><div class="detail-row"><p>💳 Card: '+cardNumber+'</p><p>💰 Balance: '+balance.toLocaleString()+' RUB</p></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Close</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+}
+
+function showProfile(){
+    checkDailyReset();
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">👤 Profile</div><div class="profile-phone"><div class="phone-label">📱 Your Phone</div><div class="phone-number">'+phoneNumber+'</div></div><div class="detail-row"><p>👤 Name: '+playerName+'</p><p>💳 Card: '+cardNumber+'</p><p>💰 Balance: '+balance.toLocaleString()+' RUB</p>'+(isDeveloper?'<p style="color:#ffaa00;">⚡ DEV MODE ACTIVE</p>':'')+'</div><div class="limit-info">📊 Daily: Top-ups '+dailyTopUpCount.toLocaleString()+'/'+maxDailyTopUp.toLocaleString()+' | Transfers '+dailyTransferCount.toLocaleString()+'/'+maxDailyTransfers.toLocaleString()+'</div><button class="btn btn-primary" onclick="openTopUp();this.closest(\'.modal-overlay\').remove();">⬆️ Top Up</button><button class="btn btn-blue" onclick="openTransfer();this.closest(\'.modal-overlay\').remove();">💸 Transfer</button><button class="btn btn-secondary" onclick="showSubMenu();this.closest(\'.modal-overlay\').remove();">'+(hasSubscription?'⭐ Subscription Active':'⭐ Subscribe')+'</button><button class="btn btn-gold" onclick="showDevInput();this.closest(\'.modal-overlay\').remove();">'+(isDeveloper?'⚡ Dev Mode: ON':'🔑 Developer Code')+'</button><button class="btn btn-secondary" onclick="passMonth();this.closest(\'.modal-overlay\').remove();">📅 Skip Month</button><button class="btn btn-secondary" onclick="logout();this.closest(\'.modal-overlay\').remove();">🚪 Logout</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+}
+
+function showSubMenu(){
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">⭐ Subscription</div>'+(hasSubscription?'<p style="text-align:center;color:#34c759;font-size:16px;">✅ Active</p><button class="btn btn-danger" onclick="if(confirm(\'Cancel subscription?\')){hasSubscription=false;saveData();showToast(\'❌ Subscription cancelled\');this.closest(\'.modal-overlay\').remove();}">❌ Cancel Subscription</button>':'<p style="text-align:center;">💰 5 000 RUB / month</p><p style="text-align:center;color:var(--text-secondary);font-size:11px;">Removes all daily limits</p><button class="btn btn-primary" onclick="if(balance>=5000){balance-=5000;hasSubscription=true;addHistory(\'⭐ Subscription\',5000,\'minus\',\'RUB\');saveData();showToast(\'✅ Subscribed!\');this.closest(\'.modal-overlay\').remove();}else{showToast(\'⚠️ Not enough money\');}">✅ Subscribe</button>')+'<button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+}
+
+function showDevInput(){
+    if(isDeveloper){ isDeveloper=false;saveData();showToast('⚡ Dev mode OFF');document.getElementById('devBadge').style.display='none';updateUI();return; }
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🔑 Developer Code</div><p style="text-align:center;color:var(--text-secondary);font-size:12px;margin-bottom:12px;">Enter the secret code to unlock developer mode</p><div class="input-group"><div class="input-label">🔐 Code</div><input class="input-field" id="devCodeInput" placeholder="Enter code" type="password" autocomplete="off"></div><button class="btn btn-gold" id="devCodeBtn">⚡ Activate</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('devCodeBtn').onclick=function(){var code=document.getElementById('devCodeInput').value.trim();if(code===_d){isDeveloper=true;saveData();showToast('⚡ DEV MODE ON!');document.getElementById('devBadge').style.display='inline';ov.remove();updateUI();}else{showToast('❌ Wrong code!');}};
+}
+
+function logout(){
+    if(confirm('🚪 Logout? Data saved locally.')){isLoggedIn=false;pageHistory=['home'];document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});document.getElementById('pageLogin').classList.add('active');document.getElementById('bottomNav').style.display='none';document.getElementById('devBadge').style.display='none';showToast('👋 Logged out');}
+}
+
+function openTopUp(){
+    checkDailyReset();
+    var remaining=isDeveloper?'Unlimited ⚡':(maxDailyTopUp-dailyTopUpCount).toLocaleString()+' RUB';
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">⬆️ Top Up</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><div class="limit-info">📊 Remaining: '+remaining+'</div><div class="input-group"><div class="input-label">💵 Amount (RUB)</div><input class="input-field" type="number" id="topAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="topBtn">⬆️ Top Up</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('topBtn').onclick=function(){var a=parseInt(document.getElementById('topAmt').value);if(a>0){if(!isDeveloper&&!canTopUp(a))return;balance+=a;if(!isDeveloper)dailyTopUpCount+=a;addHistory('⬆️ Top Up',a,'plus','RUB');saveData();ov.remove();updateUI();showToast('✅ +'+a.toLocaleString()+' RUB');}};
+}
+
+function openTransfer(){
+    checkDailyReset();
+    var remaining=isDeveloper?'Unlimited ⚡':(maxDailyTransfers-dailyTransferCount).toLocaleString()+' RUB';
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">💸 Transfer</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><div class="limit-info">📊 Remaining: '+remaining+'</div><div class="input-group"><div class="input-label">📱 Receiver Phone</div><input class="input-field" id="tPhone" placeholder="+7XXXXXXXXXX"></div><div class="input-group"><div class="input-label">💵 Amount (RUB)</div><input class="input-field" type="number" id="tAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="tBtn">💸 Send</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('tBtn').onclick=function(){var a=parseInt(document.getElementById('tAmt').value);var p=document.getElementById('tPhone').value.trim();if(a>0&&p&&balance>=a){if(p===phoneNumber){showToast('⚠️ Cannot transfer to yourself');return;}if(!isDeveloper&&!canTransfer(a))return;balance-=a;if(!isDeveloper)dailyTransferCount+=a;addHistory('💸 Transfer to '+p,a,'minus','RUB');saveData();ov.remove();updateUI();showToast('✅ Sent '+a.toLocaleString()+' RUB');}};
+}
+
+function openDepositType(index){
+    var d=depositTypes[index];
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🏦 '+d.name+' Deposit</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><p>📊 '+d.rate+'% per year | '+d.desc+'</p><p style="color:#34c759;">💰 Monthly: '+Math.floor(d.rate/12)+'%</p><div class="input-group"><div class="input-label">💵 Amount (RUB)</div><input class="input-field" type="number" id="depAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="depBtn">✅ Open</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('depBtn').onclick=function(){var a=parseInt(document.getElementById('depAmt').value);if(a>0&&balance>=a){balance-=a;depositAccounts.push({type:d.name,amount:a,rate:d.rate,date:new Date().toLocaleDateString(),history:[]});addHistory('🏦 Deposit: '+d.name,a,'minus','RUB');saveData();ov.remove();updateUI();showToast('✅ Deposit opened! +'+Math.floor(a*d.rate/12/100).toLocaleString()+' RUB/mo');}};
+}
+
+function showDepositDetail(index){
+    var d=depositAccounts[index];var mi=Math.floor(d.amount*d.rate/12/100);
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🏦 '+d.type+'</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><div class="detail-row"><p>💵 Amount: '+d.amount.toLocaleString()+' RUB</p><p>📊 Rate: '+d.rate+'%</p><p style="color:#34c759;">💰 Monthly: +'+mi.toLocaleString()+' RUB</p><p>📅 Opened: '+d.date+'</p></div><button class="btn btn-green" id="addBtn">⬆️ Top Up</button><button class="btn btn-danger" id="closeBtn">❌ Close</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Back</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('addBtn').onclick=function(){var a=parseInt(prompt('💵 Amount (RUB): Available '+balance.toLocaleString()));if(a>0&&balance>=a){balance-=a;d.amount+=a;addHistory('⬆️ Deposit top-up',a,'minus','RUB');saveData();ov.remove();updateUI();showDepositDetail(index);}};
+    document.getElementById('closeBtn').onclick=function(){if(confirm('❌ Close deposit? +'+d.amount.toLocaleString()+' RUB returned')){balance+=d.amount;depositAccounts.splice(index,1);addHistory('🏦 Deposit closed',d.amount,'plus','RUB');saveData();ov.remove();updateUI();}};
+}
+
+function showAssetDetail(type,symbol){
+    var hold,price,name,unit='';
+    if(type==='crypto'){var c=cryptoListData.find(function(x){return x.symbol===symbol;});hold=cryptoHoldings[symbol]||0;price=c.price;name=c.name;}
+    else if(type==='forex'){var f=forexListData.find(function(x){return x.symbol===symbol;});hold=forexHoldings[symbol]||0;price=f.price;name=f.name;}
+    else{hold=metalHoldings[symbol]||0;price=METAL_PRICES[symbol];name=symbol;unit=' g';}
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">'+name+'</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><div class="detail-row"><p>💼 Owned: '+hold+unit+'</p><p>💵 Price: '+price.toLocaleString()+' RUB</p></div><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="qty" placeholder="0" step="0.0001"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="sum" placeholder="0"></div></div><button class="btn btn-green" id="buyBtn">🟢 Buy</button><button class="btn btn-primary" id="sellBtn">🔴 Sell</button><button class="btn btn-blue" id="incBtn">📊 Profit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('qty').oninput=function(){var q=parseFloat(this.value)||0;document.getElementById('sum').value=(q*price).toFixed(2);};
+    document.getElementById('sum').oninput=function(){var s=parseFloat(this.value)||0;document.getElementById('qty').value=(s/price).toFixed(6);};
+    document.getElementById('buyBtn').onclick=function(){var q=parseFloat(document.getElementById('qty').value)||0;if(q>0&&balance>=q*price){balance-=q*price;if(!assetPriceHistory[type+'_'+symbol])assetPriceHistory[type+'_'+symbol]=price;if(type==='crypto')cryptoHoldings[symbol]=(cryptoHoldings[symbol]||0)+q;else if(type==='forex')forexHoldings[symbol]=(forexHoldings[symbol]||0)+q;else metalHoldings[symbol]=(metalHoldings[symbol]||0)+q;addHistory('🟢 Buy '+symbol,Math.floor(q*price),'minus','RUB');saveData();ov.remove();updateUI();}};
+    document.getElementById('sellBtn').onclick=function(){var q=parseFloat(document.getElementById('qty').value)||0;if(q>0&&hold>=q){balance+=q*price;if(type==='crypto')cryptoHoldings[symbol]-=q;else if(type==='forex')forexHoldings[symbol]-=q;else metalHoldings[symbol]-=q;addHistory('🔴 Sell '+symbol,Math.floor(q*price),'plus','RUB');saveData();ov.remove();updateUI();}};
+    document.getElementById('incBtn').onclick=function(){var op=assetPriceHistory[type+'_'+symbol]||price;var inc=Math.round((price-op)*hold);var pov=document.createElement('div');pov.className='modal-overlay';pov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">📊 Profit: '+symbol+'</div><div class="detail-row"><span>Buy at</span><span style="float:right;">'+op.toLocaleString()+' RUB</span></div><div class="detail-row"><span>Now</span><span style="float:right;">'+price.toLocaleString()+' RUB</span></div><div class="detail-row"><span>Profit</span><span style="color:'+(inc>=0?'#34c759':'#e60000')+';float:right;">'+(inc>=0?'📈 +':'📉 ')+inc.toLocaleString()+' RUB</span></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';document.body.appendChild(pov);pov.addEventListener('click',function(e){if(e.target===pov)pov.remove();});};
+}
+
+function tradeStock(symbol){
+    var s=stockListData.find(function(x){return x.symbol===symbol;}),hold=stockHoldings[symbol]||0;
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">📈 '+s.name+'</div><div class="available-balance"><div class="avail-label">💰 Balance</div><div class="avail-amount">'+balance.toLocaleString()+' RUB</div></div><p>💵 Price: '+s.price.toLocaleString()+' RUB | 💼 Own: '+hold+' pcs</p><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="sqty" placeholder="0"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="ssum" placeholder="0"></div></div><button class="btn btn-green" id="sbuyBtn">🟢 Buy</button><button class="btn btn-primary" id="ssellBtn">🔴 Sell</button><button class="btn btn-blue" id="sincBtn">📊 Profit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
+    document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+    document.getElementById('sqty').oninput=function(){var q=parseInt(this.value)||0;document.getElementById('ssum').value=(q*s.price).toFixed(0);};
+    document.getElementById('ssum').oninput=function(){var sm=parseInt(this.value)||0;document.getElementById('sqty').value=Math.floor(sm/s.price);};
+    document.getElementById('sbuyBtn').onclick=function(){var q=parseInt(document.getElementById('sqty').value)||0;if(q>0&&balance>=q*s.price){balance-=q*s.price;if(!assetPriceHistory['stock_'+symbol])assetPriceHistory['stock_'+symbol]=s.price;stockHoldings[symbol]=(stockHoldings[symbol]||0)+q;addHistory('🟢 Buy stock '+symbol,q*s.price,'minus','RUB');saveData();ov.remove();updateUI();}};
+    document.getElementById('ssellBtn').onclick=function(){var q=parseInt(document.getElementById('sqty').value)||0;if(q>0&&hold>=q){balance+=q*s.price;stockHoldings[symbol]-=q;addHistory('🔴 Sell stock '+symbol,q*s.price,'plus','RUB');saveData();ov.remove();updateUI();}};
+    document.getElementById('sincBtn').onclick=function(){var op=assetPriceHistory['stock_'+symbol]||s.price;var inc=Math.round((s.price-op)*hold);var pov=document.createElement('div');pov.className='modal-overlay';pov.innerHTML='<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">📊 Profit: '+symbol+'</div><div class="detail-row"><span>Buy at</span><span style="float:right;">'+op.toLocaleString()+' RUB</span></div><div class="detail-row"><span>Now</span><span style="float:right;">'+s.price.toLocaleString()+' RUB</span></div><div class="detail-row"><span>Profit</span><span style="color:'+(inc>=0?'#34c759':'#e60000')+';float:right;">'+(inc>=0?'📈 +':'📉 ')+inc.toLocaleString()+' RUB</span></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';document.body.appendChild(pov);pov.addEventListener('click',function(e){if(e.target===pov)pov.remove();});};
+}
+
+init();
+</script>
+</body>
+</html>
+```
+
+
