@@ -2,306 +2,324 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
     <title>UdaevBank</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
-            --text: #e0e0e0;
-            --text-secondary: #888;
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --text: #ffffff;
+            --text-secondary: #999;
             --accent: #e60000;
-            --border: #1f1f1f;
-            --blue: #3399ff;
+            --accent-light: rgba(230,0,0,0.15);
+            --border: #222;
             --green: #34c759;
-            --carbon: #0f0f0f;
+            --blue: #3399ff;
             --gold: #ffaa00;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; width: 100%; }
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Roboto', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            width: 100vw;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
+        
+        /* HEADER */
         .header {
-            background: #080808;
-            padding: 10px 20px;
+            background: var(--bg);
+            padding: 16px 20px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
             border-bottom: 1px solid var(--border);
-            width: 100%;
         }
-        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
         .logo {
-            width: 36px; height: 36px;
+            width: 40px; height: 40px;
             background: var(--accent);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(230,0,0,0.3);
         }
-        .logo-text { font-size: 18px; font-weight: 700; }
+        .header-title { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
         .dev-badge {
             background: var(--gold);
             color: #000;
-            font-size: 9px;
-            padding: 2px 8px;
-            border-radius: 8px;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 10px;
             font-weight: 700;
-            margin-left: 8px;
             display: none;
         }
-        .header-right { display: flex; gap: 8px; align-items: center; }
         .header-btn {
-            width: 36px; height: 36px;
+            width: 44px; height: 44px;
             border-radius: 50%;
-            background: #0a0a0a;
+            background: var(--surface);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: var(--text);
-            font-size: 18px;
+            font-size: 20px;
+            transition: background 0.15s;
         }
-        .header-btn:hover { background: #1a1a1a; }
+        .header-btn:active { background: #222; }
+        
+        /* MAIN */
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            -webkit-overflow-scrolling: touch;
             padding-bottom: 80px;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
         }
-        @media (max-width: 600px) {
-            .main-content { padding: 12px; padding-bottom: 80px; }
-            .header { padding: 10px 12px; }
-        }
-        .card-full {
-            background: linear-gradient(135deg, #0a0a1e, #0c1226, #081530);
+        .page { display: none; padding: 20px; }
+        .page.active { display: block; }
+        
+        /* CARD */
+        .bank-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             border-radius: 20px;
             padding: 24px;
-            color: #fff;
-            margin-bottom: 16px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.04);
+            margin-bottom: 20px;
             position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
-        .card-badge {
+        .bank-card::before {
+            content: '';
             position: absolute;
-            top: 16px; right: 20px;
-            background: rgba(255,255,255,0.06);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
+            top: -50%; right: -50%;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
         }
-        .card-balance-label { font-size: 13px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-        .card-balance { font-size: 42px; font-weight: 700; margin: 6px 0 16px; }
-        .card-balance span { font-size: 18px; font-weight: 400; opacity: 0.7; }
-        .card-number {
-            font-size: 16px;
-            letter-spacing: 3px;
-            opacity: 0.8;
-            font-family: 'Courier New', monospace;
+        .bank-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -30%;
+            width: 150px; height: 150px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 50%;
         }
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            opacity: 0.5;
-            margin-top: 8px;
-        }
-        .quick-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+        .card-type {
+            font-size: 11px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 20px;
         }
-        .quick-btn {
-            background: var(--carbon);
-            border-radius: 14px;
-            padding: 16px 8px;
+        .card-balance {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+        .card-balance small { font-size: 18px; opacity: 0.5; font-weight: 400; }
+        .card-phone {
+            font-size: 13px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .card-bank { font-size: 11px; opacity: 0.4; text-transform: uppercase; letter-spacing: 1px; }
+        .card-system { font-size: 11px; opacity: 0.4; }
+        
+        /* ACTIONS */
+        .actions-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .action-btn {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 14px 8px;
             text-align: center;
             cursor: pointer;
             border: 1px solid var(--border);
-            transition: transform 0.1s;
+            transition: all 0.15s;
         }
-        .quick-btn:hover { background: #1a1a1a; }
-        .quick-btn:active { transform: scale(0.95); }
-        .quick-btn .material-icons {
+        .action-btn:active { transform: scale(0.95); background: #1e1e1e; }
+        .action-btn .material-icons {
             font-size: 24px;
             color: var(--accent);
             margin-bottom: 6px;
             display: block;
         }
-        .quick-btn span { font-size: 10px; font-weight: 500; }
+        .action-btn span { font-size: 10px; font-weight: 500; display: block; line-height: 1.3; }
+        
+        /* LIST */
         .section-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin: 16px 0 10px;
             letter-spacing: 1px;
+            margin-bottom: 10px;
         }
         .list-item {
-            background: var(--carbon);
+            background: var(--surface);
             border-radius: 14px;
-            padding: 14px 16px;
+            padding: 16px;
             margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             cursor: pointer;
             border: 1px solid var(--border);
-            transition: border-color 0.1s;
+            transition: all 0.15s;
         }
-        .list-item:hover { border-color: var(--accent); }
-        .li-icon {
-            width: 40px; height: 40px;
+        .list-item:active { background: #1e1e1e; border-color: #333; }
+        .item-icon {
+            width: 42px; height: 42px;
             border-radius: 12px;
-            background: #050505;
+            background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
             color: var(--accent);
+            font-size: 20px;
         }
-        .li-icon .material-icons { font-size: 20px; }
-        .li-info { flex: 1; min-width: 0; }
-        .li-name { font-size: 14px; font-weight: 500; }
-        .li-sub { font-size: 11px; color: var(--text-secondary); }
-        .li-amount { font-size: 15px; font-weight: 600; text-align: right; white-space: nowrap; }
-        .li-amount.plus { color: var(--green); }
-        .li-amount.minus { color: var(--accent); }
+        .item-info { flex: 1; min-width: 0; }
+        .item-name { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+        .item-sub { font-size: 11px; color: var(--text-secondary); }
+        .item-amount { font-size: 16px; font-weight: 600; text-align: right; white-space: nowrap; }
+        .item-amount.plus { color: var(--green); }
+        .item-amount.minus { color: var(--accent); }
+        
+        /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: #080808;
+            background: #0d0d0d;
             border-top: 1px solid var(--border);
-            display: flex;
-            padding: 6px 0;
+            display: none;
             z-index: 100;
+            padding: 6px 0;
+            padding-bottom: max(6px, env(safe-area-inset-bottom));
         }
+        .bottom-nav-inner { display: flex; max-width: 500px; margin: 0 auto; }
         .nav-item {
             flex: 1;
             text-align: center;
             cursor: pointer;
-            padding: 4px 2px;
+            padding: 6px 2px;
             color: var(--text-secondary);
             background: none;
             border: none;
             font-family: inherit;
             font-size: 9px;
+            transition: color 0.15s;
         }
-        .nav-item .material-icons { font-size: 22px; display: block; margin: 0 auto 2px; }
-        .nav-item:hover { color: #fff; }
+        .nav-item .material-icons { font-size: 22px; display: block; margin: 0 auto 3px; }
         .nav-item.active { color: var(--accent); }
-        .page { display: none; }
-        .page.active { display: block; }
+        
+        /* MODAL */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
             z-index: 1000;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end;
+            animation: fadeIn 0.2s;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-sheet {
-            background: #0f0f0f;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 20px;
-            border: 1px solid var(--accent);
-            animation: popIn 0.3s ease-out;
+            animation: slideUp 0.3s ease-out;
+            border-top: 2px solid var(--accent);
         }
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .modal-handle {
             width: 36px; height: 4px;
-            background: var(--border);
+            background: #333;
             border-radius: 2px;
             margin: 0 auto 16px;
         }
-        .modal-title {
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            text-align: center;
-        }
+        .modal-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 16px; }
         .input-group { margin-bottom: 14px; }
         .input-label {
             font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
         .input-field {
             width: 100%;
-            padding: 14px;
-            background: #050505;
+            padding: 14px 16px;
+            background: #1a1a1a;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             color: var(--text);
             outline: none;
             font-family: inherit;
+            transition: border-color 0.15s;
         }
         .input-field:focus { border-color: var(--accent); }
         .input-row { display: flex; gap: 10px; }
         .input-row .input-group { flex: 1; }
-        .input-hint { font-size: 11px; color: var(--accent); margin-top: 4px; }
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 8px;
             font-family: inherit;
-            transition: opacity 0.1s;
+            transition: all 0.15s;
+            letter-spacing: -0.2px;
         }
-        .btn:hover { opacity: 0.9; }
-        .btn:active { opacity: 0.7; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
         .btn-primary { background: var(--accent); color: #fff; }
         .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--border); }
-        .btn-danger { background: transparent; color: #ff4444; border: 1px solid #ff4444; }
         .btn-blue { background: var(--blue); color: #fff; }
         .btn-green { background: var(--green); color: #fff; }
         .btn-gold { background: linear-gradient(135deg, #ffaa00, #ff8800); color: #000; font-weight: 700; }
+        .btn-danger { background: transparent; color: #ff4444; border: 1px solid #ff4444; }
         .tab-bar { display: flex; gap: 8px; margin-bottom: 14px; }
         .tab-btn {
             flex: 1;
             padding: 10px;
             border-radius: 10px;
             border: 1px solid var(--border);
-            background: var(--carbon);
+            background: #1a1a1a;
             color: var(--text);
             cursor: pointer;
             font-weight: 600;
@@ -309,33 +327,52 @@
             text-align: center;
             font-family: inherit;
         }
-        .tab-btn.active { background: var(--accent); color: #fff; }
-        .detail-row { background: #050505; border-radius: 10px; padding: 14px; margin-bottom: 6px; }
-        .analytics-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
-        .analytics-card {
-            background: var(--carbon);
+        .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .detail-row { background: #1a1a1a; border-radius: 12px; padding: 14px; margin-bottom: 6px; }
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .stat-card {
+            background: var(--surface);
             border-radius: 14px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+        .stat-value { font-size: 20px; font-weight: 700; }
+        .stat-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+        .green { color: var(--green); }
+        .red { color: var(--accent); }
+        .balance-box {
+            background: #1a1a1a;
+            border-radius: 12px;
             padding: 14px;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .balance-box .amount { font-size: 22px; font-weight: 700; color: var(--green); }
+        .balance-box .label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+        .phone-box {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .phone-box .phone { font-size: 20px; font-weight: 700; color: var(--green); letter-spacing: 1px; }
+        .phone-box .label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+        .limit-box {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 10px 0;
+            font-size: 11px;
+            color: var(--text-secondary);
             text-align: center;
             border: 1px solid var(--border);
         }
-        .analytics-card .card-value { font-size: 18px; font-weight: 700; }
-        .analytics-card .card-label { font-size: 10px; color: var(--text-secondary); }
-        .income-green { color: var(--green); }
-        .income-red { color: var(--accent); }
-        .available-balance {
-            background: #080808;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-            text-align: center;
-            border: 1px solid #1a1a1a;
-        }
-        .avail-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
-        .avail-amount { font-size: 18px; font-weight: 700; color: var(--green); margin-top: 4px; }
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             background: #1a1a1a;
@@ -345,43 +382,14 @@
             font-size: 13px;
             z-index: 2000;
             border: 1px solid var(--accent);
-            animation: fadeIn 0.3s;
             pointer-events: none;
             white-space: nowrap;
+            animation: toastIn 0.3s;
         }
-        @keyframes fadeIn {
+        @keyframes toastIn {
             from { opacity: 0; transform: translateX(-50%) translateY(15px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        .profile-phone {
-            background: #080808;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
-        }
-        .profile-phone .phone-number { font-size: 20px; font-weight: 700; color: var(--green); letter-spacing: 1px; }
-        .profile-phone .phone-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
-        .limit-info {
-            background: #0a0a0a;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin: 10px 0;
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-        .show-more {
-            padding: 12px;
-            text-align: center;
-            color: var(--accent);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .show-more:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -389,78 +397,158 @@
 <div class="header">
     <div class="header-left">
         <div class="logo">UB</div>
-        <div class="logo-text">UdaevBank</div>
+        <div class="header-title">UdaevBank</div>
         <span class="dev-badge" id="devBadge">DEV</span>
     </div>
-    <div class="header-right">
-        <div class="header-btn" onclick="showProfile()"><span class="material-icons">person</span></div>
-    </div>
+    <div class="header-btn" onclick="showProfile()"><span class="material-icons">person</span></div>
 </div>
 
 <div class="main-content" id="mainContent">
 
-<div class="page active" id="pageLogin" style="display:flex;align-items:center;justify-content:center;min-height:60vh;">
-    <div style="width:100%;max-width:360px;text-align:center;">
-        <div class="logo" style="margin:0 auto 16px;width:60px;height:60px;font-size:28px;">UB</div>
+<div class="page active" id="pageLogin" style="display:flex;align-items:center;justify-content:center;min-height:70vh;text-align:center;">
+    <div style="width:100%;max-width:320px;">
+        <div class="logo" style="margin:0 auto 16px;width:64px;height:64px;font-size:28px;">UB</div>
         <h2 style="margin-bottom:4px;">UdaevBank</h2>
-        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px;">Create account to continue</p>
+        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:24px;">Open an account in 10 seconds</p>
         <div class="input-group">
             <div class="input-label">Your Name</div>
-            <input class="input-field" id="regName" placeholder="Enter your name" maxlength="20" autocomplete="off">
+            <input class="input-field" id="regName" placeholder="Enter your name" maxlength="20" autocomplete="off" style="text-align:center;">
         </div>
-        <button class="btn btn-primary" onclick="register()">Create Account</button>
-        <p style="color:var(--text-secondary);font-size:11px;margin-top:14px;">Phone number will be issued automatically</p>
+        <button class="btn btn-primary" onclick="register()">Open Account</button>
+        <p style="color:var(--text-secondary);font-size:11px;margin-top:14px;">Phone number will be generated automatically</p>
     </div>
 </div>
 
 <div class="page" id="pageHome">
-    <div class="card-full" onclick="showCardDetail()">
-        <div class="card-badge">RUB</div>
-        <div class="card-balance-label">Main Balance</div>
-        <div class="card-balance" id="mainBalance">0 <span>RUB</span></div>
-        <div class="card-number" id="cardNumberDisplay">.... .... .... ....</div>
-        <div class="card-footer"><span>Mastercard</span><span id="phoneDisplay">+7...</span></div>
+    <div class="bank-card" onclick="showCardDetail()">
+        <div class="card-type">Debit Card · RUB</div>
+        <div class="card-balance" id="mainBalance">0 <small>RUB</small></div>
+        <div class="card-phone" id="phoneDisplay">+7 ··· ··· ·· ··</div>
+        <div class="card-bottom">
+            <div class="card-bank">UdaevBank</div>
+            <div class="card-system">Mastercard</div>
+        </div>
     </div>
-    <div class="quick-row">
-        <div class="quick-btn" onclick="openTransfer()"><span class="material-icons">arrow_forward</span><span>Transfer</span></div>
-        <div class="quick-btn" onclick="openTopUp()"><span class="material-icons">add</span><span>Top Up</span></div>
-        <div class="quick-btn" onclick="showPage('analytics')"><span class="material-icons">analytics</span><span>Stats</span></div>
-        <div class="quick-btn" onclick="showPage('history')"><span class="material-icons">receipt_long</span><span>History</span></div>
+    <div class="actions-row">
+        <div class="action-btn" onclick="openTransfer()"><span class="material-icons">swap_horiz</span><span>Transfer</span></div>
+        <div class="action-btn" onclick="openTopUp()"><span class="material-icons">add_circle</span><span>Top Up</span></div>
+        <div class="action-btn" onclick="showPage('analytics')"><span class="material-icons">bar_chart</span><span>Stats</span></div>
+        <div class="action-btn" onclick="showPage('history')"><span class="material-icons">receipt_long</span><span>History</span></div>
     </div>
-    <div class="section-title">Recent operations</div>
+    <div class="section-title">Recent Operations</div>
     <div id="historyMini"></div>
 </div>
 
-<div class="page" id="pageHistory"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">History</div><div id="fullHistoryList"></div></div>
+<div class="page" id="pageHistory">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">History</div>
+    </div>
+    <div id="fullHistoryList"></div>
+</div>
 
-<div class="page" id="pageAnalytics"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Analytics</div><div class="analytics-summary" id="analyticsSummary"></div><div class="section-title">Details</div><div id="detailedAnalytics"></div></div>
+<div class="page" id="pageAnalytics">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Analytics</div>
+    </div>
+    <div class="analytics-grid" id="analyticsSummary"></div>
+    <div class="section-title">Details</div>
+    <div id="detailedAnalytics"></div>
+</div>
 
-<div class="page" id="pageCrypto"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Crypto</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('crypto','market')">Market</button><button class="tab-btn" onclick="switchTab('crypto','my')">My</button></div><div id="cryptoMarket"></div><div id="cryptoMy" style="display:none;"></div></div>
+<div class="page" id="pageCrypto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Crypto</div>
+    </div>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('crypto','market')">Market</button>
+        <button class="tab-btn" onclick="switchTab('crypto','my')">My Assets</button>
+    </div>
+    <div id="cryptoMarket"></div>
+    <div id="cryptoMy" style="display:none;"></div>
+</div>
 
-<div class="page" id="pageForex"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Forex</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('forex','market')">Market</button><button class="tab-btn" onclick="switchTab('forex','my')">My</button></div><div id="forexMarket"></div><div id="forexMy" style="display:none;"></div></div>
+<div class="page" id="pageForex">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Forex</div>
+    </div>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('forex','market')">Market</button>
+        <button class="tab-btn" onclick="switchTab('forex','my')">My Assets</button>
+    </div>
+    <div id="forexMarket"></div>
+    <div id="forexMy" style="display:none;"></div>
+</div>
 
-<div class="page" id="pageDeposits"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">My Deposits</div><div id="myDepositsList"></div><div class="section-title">Open New</div><div id="depositTypesList"></div><div class="list-item" onclick="showPage('metals')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">Metals</div><div class="li-sub">Gold, Silver, Platinum, Palladium</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div></div>
+<div class="page" id="pageDeposits">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Deposits</div>
+    </div>
+    <div class="section-title">My Deposits</div>
+    <div id="myDepositsList"></div>
+    <div class="section-title">Open New</div>
+    <div id="depositTypesList"></div>
+</div>
 
-<div class="page" id="pageMetals"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Metals</div><div id="metalsList"></div><div class="section-title">My Metals</div><div id="myMetalsList"></div></div>
+<div class="page" id="pageMetals">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Metals</div>
+    </div>
+    <div id="metalsList"></div>
+    <div class="section-title">My Metals</div>
+    <div id="myMetalsList"></div>
+</div>
 
-<div class="page" id="pageInvest"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Stocks</div><div id="stocksList"></div><div class="section-title">My Stocks</div><div id="myStocksList"></div></div>
+<div class="page" id="pageInvest">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Stocks</div>
+    </div>
+    <div id="stocksList"></div>
+    <div class="section-title">My Stocks</div>
+    <div id="myStocksList"></div>
+</div>
 
-<div class="page" id="pagePortfolio"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Portfolio</div><div id="portfolioContent"></div></div>
+<div class="page" id="pagePortfolio">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Portfolio</div>
+    </div>
+    <div id="portfolioContent"></div>
+</div>
 
-<div class="page" id="pageVitrina"><div onclick="goBack()" style="cursor:pointer;font-size:24px;color:var(--accent);margin-bottom:8px;"><span class="material-icons">arrow_back</span> Back</div><div class="section-title">Products</div><div class="list-item" onclick="showPage('deposits')"><div class="li-icon"><span class="material-icons">savings</span></div><div class="li-info"><div class="li-name">Deposits</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('forex')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">Forex</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('crypto')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">Crypto</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('invest')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">Stocks</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('metals')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">Metals</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div><div class="list-item" onclick="showPage('portfolio')"><div class="li-icon"><span class="material-icons">account_balance</span></div><div class="li-info"><div class="li-name">Portfolio</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div></div>
+<div class="page" id="pageVitrina">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span class="material-icons" onclick="goBack()" style="cursor:pointer;font-size:26px;color:var(--accent);">arrow_back</span>
+        <div class="section-title" style="margin:0;">Products</div>
+    </div>
+    <div class="list-item" onclick="showPage('deposits')"><div class="item-icon"><span class="material-icons">savings</span></div><div class="item-info"><div class="item-name">Deposits</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+    <div class="list-item" onclick="showPage('forex')"><div class="item-icon"><span class="material-icons">language</span></div><div class="item-info"><div class="item-name">Forex</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+    <div class="list-item" onclick="showPage('crypto')"><div class="item-icon"><span class="material-icons">currency_bitcoin</span></div><div class="item-info"><div class="item-name">Crypto</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+    <div class="list-item" onclick="showPage('invest')"><div class="item-icon"><span class="material-icons">trending_up</span></div><div class="item-info"><div class="item-name">Stocks</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+    <div class="list-item" onclick="showPage('metals')"><div class="item-icon"><span class="material-icons">diamond</span></div><div class="item-info"><div class="item-name">Metals</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+    <div class="list-item" onclick="showPage('portfolio')"><div class="item-icon"><span class="material-icons">account_balance</span></div><div class="item-info"><div class="item-name">Portfolio</div></div><span class="material-icons" style="color:var(--text-secondary);">chevron_right</span></div>
+</div>
 
 </div>
 
-<div class="bottom-nav" id="bottomNav" style="display:none;">
-    <button class="nav-item active" onclick="showPage('home')"><span class="material-icons">home</span>Home</button>
-    <button class="nav-item" onclick="showPage('crypto')"><span class="material-icons">currency_bitcoin</span>Crypto</button>
-    <button class="nav-item" onclick="showPage('forex')"><span class="material-icons">language</span>Forex</button>
-    <button class="nav-item" onclick="showPage('deposits')"><span class="material-icons">savings</span>Deposits</button>
-    <button class="nav-item" onclick="showPage('vitrina')"><span class="material-icons">storefront</span>Products</button>
+<div class="bottom-nav" id="bottomNav">
+    <div class="bottom-nav-inner">
+        <button class="nav-item active" onclick="showPage('home')"><span class="material-icons">home</span>Home</button>
+        <button class="nav-item" onclick="showPage('crypto')"><span class="material-icons">currency_bitcoin</span>Crypto</button>
+        <button class="nav-item" onclick="showPage('forex')"><span class="material-icons">language</span>Forex</button>
+        <button class="nav-item" onclick="showPage('deposits')"><span class="material-icons">savings</span>Deposits</button>
+        <button class="nav-item" onclick="showPage('vitrina')"><span class="material-icons">storefront</span>Products</button>
+    </div>
 </div>
 
 <script>
-var _d = atob('SWdvcjIwMDk=');
+var _d = 'Igor2009';
 
 var isLoggedIn = false, isDeveloper = false, balance = 0;
 var phoneNumber = '', cardNumber = '', playerName = '';
@@ -471,6 +559,7 @@ var historyData = [], depositAccounts = [];
 var cryptoHoldings = {}, forexHoldings = {}, metalHoldings = {}, stockHoldings = {};
 var pageHistory = ['home'], assetPriceHistory = {};
 var maxDailyTopUp = 10000, maxDailyTransfers = 10000;
+var allUsers = {};
 
 var METAL_PRICES = {Gold:5800, Silver:75, Platinum:3200, Palladium:4500};
 var cryptoListData = [
@@ -484,12 +573,9 @@ var cryptoListData = [
     {symbol:'DOGE', name:'Dogecoin', price:15, change:-2.1}
 ];
 var forexListData = [
-    {symbol:'USD', name:'US Dollar', price:90},
-    {symbol:'EUR', name:'Euro', price:98},
-    {symbol:'GBP', name:'Pound', price:114},
-    {symbol:'CHF', name:'Franc', price:102},
-    {symbol:'JPY', name:'Yen', price:0.6},
-    {symbol:'CNY', name:'Yuan', price:12.5}
+    {symbol:'USD', name:'US Dollar', price:90}, {symbol:'EUR', name:'Euro', price:98},
+    {symbol:'GBP', name:'Pound', price:114}, {symbol:'CHF', name:'Franc', price:102},
+    {symbol:'JPY', name:'Yen', price:0.6}, {symbol:'CNY', name:'Yuan', price:12.5}
 ];
 var depositTypes = [
     {id:0, name:'Basic', rate:12, desc:'Flexible withdrawal'},
@@ -503,200 +589,82 @@ var stockListData = [
     {symbol:'LKOH', name:'Lukoil', price:6800, change:2.1},
     {symbol:'YNDX', name:'Yandex', price:4200, change:-1.3}
 ];
-var allUsers = {};
 
 function init() {
     var saved = localStorage.getItem('ub_data');
     if (saved) {
         var data = JSON.parse(saved);
-        isLoggedIn = true;
-        playerName = data.playerName;
-        phoneNumber = data.phoneNumber;
-        cardNumber = data.cardNumber;
-        balance = data.balance;
-        historyData = data.historyData || [];
-        depositAccounts = data.depositAccounts || [];
-        cryptoHoldings = data.cryptoHoldings || {};
-        forexHoldings = data.forexHoldings || {};
-        metalHoldings = data.metalHoldings || {};
-        stockHoldings = data.stockHoldings || {};
-        assetPriceHistory = data.assetPriceHistory || {};
-        isDeveloper = data.isDeveloper || false;
-        hasSubscription = data.hasSubscription || false;
-        dailyTopUpCount = data.dailyTopUpCount || 0;
-        dailyTopUpReset = data.dailyTopUpReset || '';
-        dailyTransferCount = data.dailyTransferCount || 0;
-        dailyTransferReset = data.dailyTransferReset || '';
+        isLoggedIn = true; playerName = data.playerName; phoneNumber = data.phoneNumber;
+        cardNumber = data.cardNumber; balance = data.balance; historyData = data.historyData || [];
+        depositAccounts = data.depositAccounts || []; cryptoHoldings = data.cryptoHoldings || {};
+        forexHoldings = data.forexHoldings || {}; metalHoldings = data.metalHoldings || {};
+        stockHoldings = data.stockHoldings || {}; assetPriceHistory = data.assetPriceHistory || {};
+        isDeveloper = data.isDeveloper || false; hasSubscription = data.hasSubscription || false;
+        dailyTopUpCount = data.dailyTopUpCount || 0; dailyTopUpReset = data.dailyTopUpReset || '';
+        dailyTransferCount = data.dailyTransferCount || 0; dailyTransferReset = data.dailyTransferReset || '';
         monthPassed = data.monthPassed || 0;
-        checkDailyReset();
-        showApp();
+        checkDailyReset(); showApp();
     }
-    var all = localStorage.getItem('ub_users');
-    if (all) allUsers = JSON.parse(all);
+    var all = localStorage.getItem('ub_users'); if (all) allUsers = JSON.parse(all);
 }
 
-function generatePhone() {
-    var num = '+7';
-    for (var i = 0; i < 10; i++) num += Math.floor(Math.random() * 10);
-    if (allUsers[num]) return generatePhone();
-    return num;
-}
-
-function generateCard() {
-    var card = '';
-    for (var i = 0; i < 16; i++) {
-        card += Math.floor(Math.random() * 10);
-        if (i % 4 === 3 && i < 15) card += ' ';
-    }
-    return card;
-}
+function generatePhone() { var num = '+7'; for (var i = 0; i < 10; i++) num += Math.floor(Math.random() * 10); if (allUsers[num]) return generatePhone(); return num; }
+function generateCard() { var c = ''; for (var i = 0; i < 16; i++) { c += Math.floor(Math.random() * 10); if (i % 4 === 3 && i < 15) c += ' '; } return c; }
 
 function register() {
     var name = document.getElementById('regName').value.trim();
     if (!name) { showToast('Enter your name'); return; }
-    playerName = name;
-    phoneNumber = generatePhone();
-    cardNumber = generateCard();
-    balance = 50000;
+    playerName = name; phoneNumber = generatePhone(); cardNumber = generateCard(); balance = 50000;
     historyData = [{name: 'Welcome bonus', amount: 50000, type: 'plus', date: new Date().toLocaleDateString(), currency: 'RUB'}];
-    isLoggedIn = true;
-    allUsers[phoneNumber] = {name: playerName, phone: phoneNumber, card: cardNumber};
-    localStorage.setItem('ub_users', JSON.stringify(allUsers));
-    saveData();
-    showApp();
+    isLoggedIn = true; allUsers[phoneNumber] = {name: playerName, phone: phoneNumber, card: cardNumber};
+    localStorage.setItem('ub_users', JSON.stringify(allUsers)); saveData(); showApp();
 }
 
 function showApp() {
-    document.getElementById('pageLogin').classList.remove('active');
+    document.getElementById('pageLogin').style.display = 'none';
     document.getElementById('pageHome').classList.add('active');
-    document.getElementById('bottomNav').style.display = 'flex';
+    document.getElementById('bottomNav').style.display = 'block';
     if (isDeveloper) document.getElementById('devBadge').style.display = 'inline';
-    updateUI();
-    showToast('Welcome, ' + playerName + '!');
+    updateUI(); showToast('Welcome, ' + playerName + '!');
 }
 
 function saveData() {
-    var data = {
-        playerName: playerName, phoneNumber: phoneNumber, cardNumber: cardNumber,
-        balance: balance, historyData: historyData, depositAccounts: depositAccounts,
-        cryptoHoldings: cryptoHoldings, forexHoldings: forexHoldings,
-        metalHoldings: metalHoldings, stockHoldings: stockHoldings,
-        assetPriceHistory: assetPriceHistory, isDeveloper: isDeveloper,
-        hasSubscription: hasSubscription, dailyTopUpCount: dailyTopUpCount,
-        dailyTopUpReset: dailyTopUpReset, dailyTransferCount: dailyTransferCount,
-        dailyTransferReset: dailyTransferReset, monthPassed: monthPassed
-    };
+    var data = { playerName:playerName, phoneNumber:phoneNumber, cardNumber:cardNumber, balance:balance, historyData:historyData, depositAccounts:depositAccounts, cryptoHoldings:cryptoHoldings, forexHoldings:forexHoldings, metalHoldings:metalHoldings, stockHoldings:stockHoldings, assetPriceHistory:assetPriceHistory, isDeveloper:isDeveloper, hasSubscription:hasSubscription, dailyTopUpCount:dailyTopUpCount, dailyTopUpReset:dailyTopUpReset, dailyTransferCount:dailyTransferCount, dailyTransferReset:dailyTransferReset, monthPassed:monthPassed };
     localStorage.setItem('ub_data', JSON.stringify(data));
 }
 
-function checkDailyReset() {
-    var today = new Date().toDateString();
-    if (dailyTopUpReset !== today) { dailyTopUpCount = 0; dailyTopUpReset = today; }
-    if (dailyTransferReset !== today) { dailyTransferCount = 0; dailyTransferReset = today; }
-    saveData();
-}
-
-function addHistory(n, a, t, c, icon) {
-    historyData.push({name: n, amount: a, type: t, date: new Date().toLocaleDateString(), currency: c || 'RUB', icon: icon || ''});
-    saveData();
-    updateUI();
-}
-
-function showToast(msg) {
-    var t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(function() { t.remove(); }, 2000);
-}
+function checkDailyReset() { var today = new Date().toDateString(); if (dailyTopUpReset !== today) { dailyTopUpCount = 0; dailyTopUpReset = today; } if (dailyTransferReset !== today) { dailyTransferCount = 0; dailyTransferReset = today; } saveData(); }
+function addHistory(n, a, t, c) { historyData.push({name: n, amount: a, type: t, date: new Date().toLocaleDateString(), currency: c || 'RUB'}); saveData(); updateUI(); }
+function showToast(msg) { var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.remove(); }, 2000); }
 
 function showPage(p, skipHistory) {
     if (!isLoggedIn) return;
     if (!skipHistory) { if (pageHistory[pageHistory.length - 1] !== p) pageHistory.push(p); }
     document.querySelectorAll('.page').forEach(function(x) { x.classList.remove('active'); });
-    var m = {
-        home: 'pageHome', history: 'pageHistory', analytics: 'pageAnalytics',
-        crypto: 'pageCrypto', forex: 'pageForex', deposits: 'pageDeposits',
-        metals: 'pageMetals', invest: 'pageInvest', portfolio: 'pagePortfolio',
-        vitrina: 'pageVitrina'
-    };
-    var el = document.getElementById(m[p]);
-    if (el) el.classList.add('active');
+    var m = {home:'pageHome', history:'pageHistory', analytics:'pageAnalytics', crypto:'pageCrypto', forex:'pageForex', deposits:'pageDeposits', metals:'pageMetals', invest:'pageInvest', portfolio:'pagePortfolio', vitrina:'pageVitrina'};
+    var el = document.getElementById(m[p]); if (el) el.classList.add('active');
     document.querySelectorAll('.nav-item').forEach(function(x) { x.classList.remove('active'); });
     updateUI();
 }
 
-function goBack() {
-    if (pageHistory.length > 1) { pageHistory.pop(); showPage(pageHistory[pageHistory.length - 1], true); }
-    else { showPage('home', true); }
-}
+function goBack() { if (pageHistory.length > 1) { pageHistory.pop(); showPage(pageHistory[pageHistory.length - 1], true); } else { showPage('home', true); } }
+function switchTab(s, t) { document.getElementById(s + 'Market').style.display = t === 'market' ? 'block' : 'none'; document.getElementById(s + 'My').style.display = t === 'my' ? 'block' : 'none'; }
 
-function switchTab(s, t) {
-    document.getElementById(s + 'Market').style.display = t === 'market' ? 'block' : 'none';
-    document.getElementById(s + 'My').style.display = t === 'my' ? 'block' : 'none';
-}
+function canTopUp(amount) { checkDailyReset(); if (isDeveloper) return true; if (dailyTopUpCount + amount > maxDailyTopUp) { showToast('Daily limit: ' + maxDailyTopUp.toLocaleString() + ' RUB'); return false; } return true; }
+function canTransfer(amount) { checkDailyReset(); if (isDeveloper) return true; if (dailyTransferCount + amount > maxDailyTransfers) { showToast('Daily transfer limit: ' + maxDailyTransfers.toLocaleString() + ' RUB'); return false; } return true; }
 
-function canTopUp(amount) {
-    checkDailyReset();
-    if (isDeveloper) return true;
-    if (dailyTopUpCount + amount > maxDailyTopUp) {
-        showToast('Daily limit: ' + maxDailyTopUp.toLocaleString() + ' RUB');
-        return false;
-    }
-    return true;
-}
-
-function canTransfer(amount) {
-    checkDailyReset();
-    if (isDeveloper) return true;
-    if (dailyTransferCount + amount > maxDailyTransfers) {
-        showToast('Daily transfer limit: ' + maxDailyTransfers.toLocaleString() + ' RUB');
-        return false;
-    }
-    return true;
-}
-
-function getExpectedMonthlyIncome() {
-    var total = 0;
-    depositAccounts.forEach(function(d) { total += Math.floor(d.amount * d.rate / 12 / 100); });
-    return total;
-}
+function getExpectedMonthlyIncome() { var total = 0; depositAccounts.forEach(function(d) { total += Math.floor(d.amount * d.rate / 12 / 100); }); return total; }
 
 function getAssetGrowthIncome() {
     var total = 0;
-    for (var s in cryptoHoldings) {
-        if (cryptoHoldings[s] > 0) {
-            var c = cryptoListData.find(function(x) { return x.symbol === s; });
-            if (c && assetPriceHistory['crypto_' + s]) total += (c.price - assetPriceHistory['crypto_' + s]) * cryptoHoldings[s];
-        }
-    }
-    for (var s in forexHoldings) {
-        if (forexHoldings[s] > 0) {
-            var f = forexListData.find(function(x) { return x.symbol === s; });
-            if (f && assetPriceHistory['forex_' + s]) total += (f.price - assetPriceHistory['forex_' + s]) * forexHoldings[s];
-        }
-    }
-    for (var n in metalHoldings) {
-        if (metalHoldings[n] > 0 && assetPriceHistory['metal_' + n]) total += (METAL_PRICES[n] - assetPriceHistory['metal_' + n]) * metalHoldings[n];
-    }
-    for (var s in stockHoldings) {
-        if (stockHoldings[s] > 0) {
-            var st = stockListData.find(function(x) { return x.symbol === s; });
-            if (st && assetPriceHistory['stock_' + s]) total += (st.price - assetPriceHistory['stock_' + s]) * stockHoldings[s];
-        }
-    }
+    for (var s in cryptoHoldings) { if (cryptoHoldings[s] > 0) { var c = cryptoListData.find(function(x) { return x.symbol === s; }); if (c && assetPriceHistory['crypto_' + s]) total += (c.price - assetPriceHistory['crypto_' + s]) * cryptoHoldings[s]; } }
+    for (var s in forexHoldings) { if (forexHoldings[s] > 0) { var f = forexListData.find(function(x) { return x.symbol === s; }); if (f && assetPriceHistory['forex_' + s]) total += (f.price - assetPriceHistory['forex_' + s]) * forexHoldings[s]; } }
+    for (var n in metalHoldings) { if (metalHoldings[n] > 0 && assetPriceHistory['metal_' + n]) total += (METAL_PRICES[n] - assetPriceHistory['metal_' + n]) * metalHoldings[n]; }
+    for (var s in stockHoldings) { if (stockHoldings[s] > 0) { var st = stockListData.find(function(x) { return x.symbol === s; }); if (st && assetPriceHistory['stock_' + s]) total += (st.price - assetPriceHistory['stock_' + s]) * stockHoldings[s]; } }
     return Math.round(total);
 }
 
-function getTotalAssets() {
-    var total = balance;
-    for (var s in cryptoHoldings) { var c = cryptoListData.find(function(x) { return x.symbol === s; }); if (c) total += cryptoHoldings[s] * c.price; }
-    for (var s in forexHoldings) { var f = forexListData.find(function(x) { return x.symbol === s; }); if (f) total += forexHoldings[s] * f.price; }
-    for (var n in metalHoldings) total += metalHoldings[n] * METAL_PRICES[n];
-    for (var i = 0; i < depositAccounts.length; i++) total += depositAccounts[i].amount;
-    for (var s in stockHoldings) { var st = stockListData.find(function(x) { return x.symbol === s; }); if (st) total += stockHoldings[s] * st.price; }
-    return total;
-}
+function getTotalAssets() { var total = balance; for (var s in cryptoHoldings) { var c = cryptoListData.find(function(x) { return x.symbol === s; }); if (c) total += cryptoHoldings[s] * c.price; } for (var s in forexHoldings) { var f = forexListData.find(function(x) { return x.symbol === s; }); if (f) total += forexHoldings[s] * f.price; } for (var n in metalHoldings) total += metalHoldings[n] * METAL_PRICES[n]; for (var i = 0; i < depositAccounts.length; i++) total += depositAccounts[i].amount; for (var s in stockHoldings) { var st = stockListData.find(function(x) { return x.symbol === s; }); if (st) total += stockHoldings[s] * st.price; } return total; }
 
 function passMonth() {
     monthPassed++;
@@ -705,338 +673,71 @@ function passMonth() {
     stockListData.forEach(function(s) { s.price = Math.round(s.price * (1 + (Math.random() - 0.5) * 0.15)); s.change = parseFloat((s.change + (Math.random() - 0.5) * 10).toFixed(1)); });
     Object.keys(METAL_PRICES).forEach(function(k) { METAL_PRICES[k] = Math.round(METAL_PRICES[k] * (1 + (Math.random() - 0.5) * 0.1)); });
     var totalInt = 0;
-    depositAccounts.forEach(function(d) {
-        var interest = Math.floor(d.amount * d.rate / 12 / 100);
-        if (!d.history) d.history = [];
-        d.history.push({date: new Date().toLocaleDateString(), amount: interest});
-        balance += interest;
-        totalInt += interest;
-    });
+    depositAccounts.forEach(function(d) { var interest = Math.floor(d.amount * d.rate / 12 / 100); if (!d.history) d.history = []; d.history.push({date: new Date().toLocaleDateString(), amount: interest}); balance += interest; totalInt += interest; });
     if (totalInt > 0) addHistory('Deposit interest', totalInt, 'plus', 'RUB');
-    saveData();
-    showToast('Month passed! Prices updated.');
-    updateUI();
+    saveData(); showToast('Month passed! Prices updated.'); updateUI();
 }
-</script>
 
-<script>
 function updateUI() {
     if (!isLoggedIn) return;
-    document.getElementById('mainBalance').innerHTML = balance.toLocaleString() + ' <span>RUB</span>';
-    document.getElementById('cardNumberDisplay').textContent = cardNumber;
+    document.getElementById('mainBalance').innerHTML = balance.toLocaleString() + ' <small>RUB</small>';
     document.getElementById('phoneDisplay').textContent = phoneNumber;
     if (isDeveloper) document.getElementById('devBadge').style.display = 'inline';
-
+    
     var hm = document.getElementById('historyMini');
-    if (hm) {
-        var recent = historyData.slice(-3).reverse();
-        hm.innerHTML = recent.map(function(h) {
-            return '<div class="list-item"><div class="li-icon"><span class="material-icons">' +
-            (h.type === 'plus' ? 'arrow_downward' : 'arrow_upward') +
-            '</span></div><div class="li-info"><div class="li-name">' + h.name +
-            '</div><div class="li-sub">' + h.date +
-            '</div></div><div class="li-amount ' + (h.type === 'plus' ? 'plus' : 'minus') +
-            '">' + (h.type === 'plus' ? '+' : '-') + h.amount.toLocaleString() + ' ' + (h.currency || 'RUB') +
-            '</div></div>';
-        }).join('') + '<div class="show-more" onclick="showPage(\'history\')">Show all history</div>';
-    }
-
-    var fhl = document.getElementById('fullHistoryList');
-    if (fhl) fhl.innerHTML = historyData.slice().reverse().map(function(h) {
-        return '<div class="list-item"><div class="li-icon"><span class="material-icons">' +
-        (h.type === 'plus' ? 'arrow_downward' : 'arrow_upward') +
-        '</span></div><div class="li-info"><div class="li-name">' + h.name +
-        '</div><div class="li-sub">' + h.date +
-        '</div></div><div class="li-amount ' + (h.type === 'plus' ? 'plus' : 'minus') +
-        '">' + (h.type === 'plus' ? '+' : '-') + h.amount.toLocaleString() + ' ' + (h.currency || 'RUB') +
-        '</div></div>';
-    }).join('') || '<p style="text-align:center;color:var(--text-secondary);">No operations yet</p>';
-
-    var totalInc = 0, totalExp = 0;
-    historyData.forEach(function(h) { if (h.type === 'plus') totalInc += h.amount; else totalExp += h.amount; });
-    var growthInc = getAssetGrowthIncome();
-    var monthlyInc = getExpectedMonthlyIncome();
-
-    var summary = document.getElementById('analyticsSummary');
-    if (summary) summary.innerHTML =
-        '<div class="analytics-card"><div class="card-value income-green">+' + totalInc.toLocaleString() + '</div><div class="card-label">Total Earned</div></div>' +
-        '<div class="analytics-card"><div class="card-value ' + (growthInc >= 0 ? 'income-green' : 'income-red') + '">' + (growthInc >= 0 ? '+' : '') + growthInc.toLocaleString() + '</div><div class="card-label">Asset Growth</div></div>' +
-        '<div class="analytics-card"><div class="card-value income-green">+' + monthlyInc.toLocaleString() + '</div><div class="card-label">Deposits/mo</div></div>' +
-        '<div class="analytics-card"><div class="card-value">' + getTotalAssets().toLocaleString() + '</div><div class="card-label">Total Assets</div></div>';
-
-    var da = document.getElementById('detailedAnalytics');
-    if (da) da.innerHTML =
-        '<div class="detail-row"><p>Earned: <span style="color:#34c759;">+' + totalInc.toLocaleString() + ' RUB</span></p></div>' +
-        '<div class="detail-row"><p>Spent: <span style="color:#e60000;">-' + totalExp.toLocaleString() + ' RUB</span></p></div>' +
-        '<div class="detail-row"><p>Asset change: <span style="color:' + (growthInc >= 0 ? '#34c759' : '#e60000') + ';">' + (growthInc >= 0 ? '+' : '') + growthInc.toLocaleString() + ' RUB</span></p></div>' +
-        '<div class="detail-row"><p>Deposits/mo: <span style="color:#34c759;">+' + monthlyInc.toLocaleString() + ' RUB</span></p></div>';
-
-    var cm = document.getElementById('cryptoMarket');
-    if (cm) cm.innerHTML = cryptoListData.map(function(c) {
-        return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\'' + c.symbol + '\')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">' + c.symbol + ' - ' + c.name + '</div><div class="li-sub">' + c.price.toLocaleString() + ' RUB | ' + (c.change >= 0 ? '+' : '') + c.change + '%</div></div></div>';
-    }).join('');
-
-    var cmy = document.getElementById('cryptoMy');
-    if (cmy) {
-        var owned = Object.entries(cryptoHoldings).filter(function(e) { return e[1] > 0; });
-        cmy.innerHTML = owned.length > 0 ? owned.map(function(e) {
-            var c = cryptoListData.find(function(x) { return x.symbol === e[0]; });
-            return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\'' + e[0] + '\')"><div class="li-icon"><span class="material-icons">currency_bitcoin</span></div><div class="li-info"><div class="li-name">' + e[0] + '</div><div class="li-sub">' + e[1].toFixed(4) + ' | ' + (e[1] * (c ? c.price : 0)).toLocaleString() + ' RUB</div></div></div>';
-        }).join('') : '<p style="text-align:center;color:var(--text-secondary);">No crypto</p>';
-    }
-
-    var fm = document.getElementById('forexMarket');
-    if (fm) fm.innerHTML = forexListData.map(function(f) {
-        return '<div class="list-item" onclick="showAssetDetail(\'forex\',\'' + f.symbol + '\')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">' + f.symbol + ' - ' + f.name + '</div><div class="li-sub">' + f.price.toFixed(2) + ' RUB</div></div></div>';
-    }).join('');
-
-    var fmy = document.getElementById('forexMy');
-    if (fmy) {
-        var of = Object.entries(forexHoldings).filter(function(e) { return e[1] > 0; });
-        fmy.innerHTML = of.length > 0 ? of.map(function(e) {
-            var f = forexListData.find(function(x) { return x.symbol === e[0]; });
-            return '<div class="list-item" onclick="showAssetDetail(\'forex\',\'' + e[0] + '\')"><div class="li-icon"><span class="material-icons">language</span></div><div class="li-info"><div class="li-name">' + e[0] + '</div><div class="li-sub">' + e[1].toFixed(2) + ' | ' + (e[1] * (f ? f.price : 0)).toLocaleString() + ' RUB</div></div></div>';
-        }).join('') : '<p style="text-align:center;color:var(--text-secondary);">No forex</p>';
-    }
-
-    var mdl = document.getElementById('myDepositsList');
-    if (mdl) mdl.innerHTML = depositAccounts.length > 0 ? depositAccounts.map(function(d, i) {
-        var mi = Math.floor(d.amount * d.rate / 12 / 100);
-        return '<div class="list-item" onclick="showDepositDetail(' + i + ')"><div class="li-icon"><span class="material-icons">savings</span></div><div class="li-info"><div class="li-name">' + d.type + '</div><div class="li-sub">' + d.amount.toLocaleString() + ' RUB | ' + d.rate + '% | +' + mi.toLocaleString() + '/mo</div></div></div>';
-    }).join('') : '<p style="text-align:center;color:var(--text-secondary);">No deposits</p>';
-
-    var dtl = document.getElementById('depositTypesList');
-    if (dtl) dtl.innerHTML = depositTypes.map(function(d, i) {
-        return '<div class="list-item" onclick="openDepositType(' + i + ')"><div class="li-icon"><span class="material-icons">add_circle</span></div><div class="li-info"><div class="li-name">' + d.name + '</div><div class="li-sub">' + d.rate + '% | ' + d.desc + '</div></div></div>';
-    }).join('');
-
-    var ml = document.getElementById('metalsList');
-    if (ml) ml.innerHTML = Object.entries(METAL_PRICES).map(function(e) {
-        return '<div class="list-item" onclick="showAssetDetail(\'metal\',\'' + e[0] + '\')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">' + e[0] + '</div><div class="li-sub">' + e[1].toLocaleString() + ' RUB/g | Own: ' + (metalHoldings[e[0]] || 0).toFixed(1) + ' g</div></div></div>';
-    }).join('');
-
-    var mml = document.getElementById('myMetalsList');
-    if (mml) {
-        var om = Object.entries(metalHoldings).filter(function(e) { return e[1] > 0; });
-        mml.innerHTML = om.length > 0 ? om.map(function(e) {
-            return '<div class="list-item" onclick="showAssetDetail(\'metal\',\'' + e[0] + '\')"><div class="li-icon"><span class="material-icons">diamond</span></div><div class="li-info"><div class="li-name">' + e[0] + '</div><div class="li-sub">' + e[1].toFixed(1) + ' g | ' + (e[1] * METAL_PRICES[e[0]]).toLocaleString() + ' RUB</div></div></div>';
-        }).join('') : '<p style="text-align:center;color:var(--text-secondary);">No metals</p>';
-    }
-
-    var sl = document.getElementById('stocksList');
-    if (sl) sl.innerHTML = stockListData.map(function(s) {
-        return '<div class="list-item" onclick="tradeStock(\'' + s.symbol + '\')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">' + s.symbol + ' - ' + s.name + '</div><div class="li-sub">' + s.price.toLocaleString() + ' RUB | ' + (s.change >= 0 ? '+' : '') + s.change + '%</div></div></div>';
-    }).join('');
-
-    var msl = document.getElementById('myStocksList');
-    if (msl) {
-        var os = Object.entries(stockHoldings).filter(function(e) { return e[1] > 0; });
-        msl.innerHTML = os.length > 0 ? os.map(function(e) {
-            var s = stockListData.find(function(x) { return x.symbol === e[0]; });
-            return '<div class="list-item" onclick="tradeStock(\'' + e[0] + '\')"><div class="li-icon"><span class="material-icons">trending_up</span></div><div class="li-info"><div class="li-name">' + e[0] + '</div><div class="li-sub">' + e[1] + ' pcs | ' + (e[1] * (s ? s.price : 0)).toLocaleString() + ' RUB</div></div></div>';
-        }).join('') : '<p style="text-align:center;color:var(--text-secondary);">No stocks</p>';
-    }
-
-    var pc = document.getElementById('portfolioContent');
-    if (pc) {
-        var totalPF = getTotalAssets();
-        pc.innerHTML = '<div class="detail-row"><p style="color:var(--text-secondary);">Total Value</p><p style="font-size:24px;font-weight:700;">' + totalPF.toLocaleString() + ' RUB</p></div><div class="list-item"><div class="li-icon"><span class="material-icons">home</span></div><div class="li-info"><div class="li-name">RUB Account</div></div><div class="li-amount plus">' + balance.toLocaleString() + ' RUB</div></div>';
-    }
+    if (hm) { var recent = historyData.slice(-3).reverse(); hm.innerHTML = recent.map(function(h) { return '<div class="list-item"><div class="item-icon"><span class="material-icons">' + (h.type === 'plus' ? 'arrow_downward' : 'arrow_upward') + '</span></div><div class="item-info"><div class="item-name">' + h.name + '</div><div class="item-sub">' + h.date + '</div></div><div class="item-amount ' + (h.type === 'plus' ? 'plus' : 'minus') + '">' + (h.type === 'plus' ? '+' : '-') + h.amount.toLocaleString() + ' ' + h.currency + '</div></div>'; }).join('') + '<div class="list-item" onclick="showPage(\'history\')" style="justify-content:center;"><div class="item-name" style="color:var(--accent);">Show all history</div></div>'; }
+    
+    var fhl = document.getElementById('fullHistoryList'); if (fhl) fhl.innerHTML = historyData.slice().reverse().map(function(h) { return '<div class="list-item"><div class="item-icon"><span class="material-icons">' + (h.type === 'plus' ? 'arrow_downward' : 'arrow_upward') + '</span></div><div class="item-info"><div class="item-name">' + h.name + '</div><div class="item-sub">' + h.date + '</div></div><div class="item-amount ' + (h.type === 'plus' ? 'plus' : 'minus') + '">' + (h.type === 'plus' ? '+' : '-') + h.amount.toLocaleString() + ' ' + h.currency + '</div></div>'; }).join('') || '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No operations</p>';
+    
+    var totalInc = 0, totalExp = 0; historyData.forEach(function(h) { if (h.type === 'plus') totalInc += h.amount; else totalExp += h.amount; });
+    var growthInc = getAssetGrowthIncome(); var monthlyInc = getExpectedMonthlyIncome();
+    var summary = document.getElementById('analyticsSummary'); if (summary) summary.innerHTML = '<div class="stat-card"><div class="stat-value green">+' + totalInc.toLocaleString() + '</div><div class="stat-label">Total Earned</div></div><div class="stat-card"><div class="stat-value ' + (growthInc >= 0 ? 'green' : 'red') + '">' + (growthInc >= 0 ? '+' : '') + growthInc.toLocaleString() + '</div><div class="stat-label">Asset Growth</div></div><div class="stat-card"><div class="stat-value green">+' + monthlyInc.toLocaleString() + '</div><div class="stat-label">Deposits/mo</div></div><div class="stat-card"><div class="stat-value">' + getTotalAssets().toLocaleString() + '</div><div class="stat-label">Total Assets</div></div>';
+    var da = document.getElementById('detailedAnalytics'); if (da) da.innerHTML = '<div class="detail-row"><p style="display:flex;justify-content:space-between;">Earned <span class="green">+' + totalInc.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Spent <span class="red">-' + totalExp.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Asset Change <span class="' + (growthInc >= 0 ? 'green' : 'red') + '">' + (growthInc >= 0 ? '+' : '') + growthInc.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Deposits/mo <span class="green">+' + monthlyInc.toLocaleString() + ' RUB</span></p></div>';
+    
+    var cm = document.getElementById('cryptoMarket'); if (cm) cm.innerHTML = cryptoListData.map(function(c) { return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\'' + c.symbol + '\')"><div class="item-icon"><span class="material-icons">currency_bitcoin</span></div><div class="item-info"><div class="item-name">' + c.symbol + '</div><div class="item-sub">' + c.price.toLocaleString() + ' RUB · ' + (c.change >= 0 ? '+' : '') + c.change + '%</div></div></div>'; }).join('');
+    var cmy = document.getElementById('cryptoMy'); if (cmy) { var owned = Object.entries(cryptoHoldings).filter(function(e) { return e[1] > 0; }); cmy.innerHTML = owned.length > 0 ? owned.map(function(e) { var c = cryptoListData.find(function(x) { return x.symbol === e[0]; }); return '<div class="list-item" onclick="showAssetDetail(\'crypto\',\'' + e[0] + '\')"><div class="item-icon"><span class="material-icons">currency_bitcoin</span></div><div class="item-info"><div class="item-name">' + e[0] + '</div><div class="item-sub">' + e[1].toFixed(4) + ' · ' + (e[1] * (c ? c.price : 0)).toLocaleString() + ' RUB</div></div></div>'; }).join('') : '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No crypto assets</p>'; }
+    
+    var fm = document.getElementById('forexMarket'); if (fm) fm.innerHTML = forexListData.map(function(f) { return '<div class="list-item" onclick="showAssetDetail(\'forex\',\'' + f.symbol + '\')"><div class="item-icon"><span class="material-icons">language</span></div><div class="item-info"><div class="item-name">' + f.symbol + '</div><div class="item-sub">' + f.price.toFixed(2) + ' RUB</div></div></div>'; }).join('');
+    var fmy = document.getElementById('forexMy'); if (fmy) { var of = Object.entries(forexHoldings).filter(function(e) { return e[1] > 0; }); fmy.innerHTML = of.length > 0 ? of.map(function(e) { return '<div class="list-item" onclick="showAssetDetail(\'forex\',\'' + e[0] + '\')"><div class="item-icon"><span class="material-icons">language</span></div><div class="item-info"><div class="item-name">' + e[0] + '</div><div class="item-sub">' + e[1].toFixed(2) + ' · ' + (e[1] * (forexListData.find(function(x) { return x.symbol === e[0]; }) || {price:0}).price).toLocaleString() + ' RUB</div></div></div>'; }).join('') : '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No forex assets</p>'; }
+    
+    var mdl = document.getElementById('myDepositsList'); if (mdl) mdl.innerHTML = depositAccounts.length > 0 ? depositAccounts.map(function(d, i) { var mi = Math.floor(d.amount * d.rate / 12 / 100); return '<div class="list-item" onclick="showDepositDetail(' + i + ')"><div class="item-icon"><span class="material-icons">savings</span></div><div class="item-info"><div class="item-name">' + d.type + '</div><div class="item-sub">' + d.amount.toLocaleString() + ' RUB · ' + d.rate + '%</div></div><div class="item-amount plus">+' + mi.toLocaleString() + '/mo</div></div>'; }).join('') : '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No deposits</p>';
+    var dtl = document.getElementById('depositTypesList'); if (dtl) dtl.innerHTML = depositTypes.map(function(d, i) { return '<div class="list-item" onclick="openDepositType(' + i + ')"><div class="item-icon"><span class="material-icons">add_circle</span></div><div class="item-info"><div class="item-name">' + d.name + '</div><div class="item-sub">' + d.rate + '% · ' + d.desc + '</div></div></div>'; }).join('');
+    
+    var ml = document.getElementById('metalsList'); if (ml) ml.innerHTML = Object.entries(METAL_PRICES).map(function(e) { return '<div class="list-item" onclick="showAssetDetail(\'metal\',\'' + e[0] + '\')"><div class="item-icon"><span class="material-icons">diamond</span></div><div class="item-info"><div class="item-name">' + e[0] + '</div><div class="item-sub">' + e[1].toLocaleString() + ' RUB/g · Own: ' + (metalHoldings[e[0]] || 0).toFixed(1) + ' g</div></div></div>'; }).join('');
+    var mml = document.getElementById('myMetalsList'); if (mml) { var om = Object.entries(metalHoldings).filter(function(e) { return e[1] > 0; }); mml.innerHTML = om.length > 0 ? om.map(function(e) { return '<div class="list-item" onclick="showAssetDetail(\'metal\',\'' + e[0] + '\')"><div class="item-icon"><span class="material-icons">diamond</span></div><div class="item-info"><div class="item-name">' + e[0] + '</div><div class="item-sub">' + e[1].toFixed(1) + ' g · ' + (e[1] * METAL_PRICES[e[0]]).toLocaleString() + ' RUB</div></div></div>'; }).join('') : '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No metals</p>'; }
+    
+    var sl = document.getElementById('stocksList'); if (sl) sl.innerHTML = stockListData.map(function(s) { return '<div class="list-item" onclick="tradeStock(\'' + s.symbol + '\')"><div class="item-icon"><span class="material-icons">trending_up</span></div><div class="item-info"><div class="item-name">' + s.symbol + '</div><div class="item-sub">' + s.price.toLocaleString() + ' RUB · ' + (s.change >= 0 ? '+' : '') + s.change + '%</div></div></div>'; }).join('');
+    var msl = document.getElementById('myStocksList'); if (msl) { var os = Object.entries(stockHoldings).filter(function(e) { return e[1] > 0; }); msl.innerHTML = os.length > 0 ? os.map(function(e) { var s = stockListData.find(function(x) { return x.symbol === e[0]; }); return '<div class="list-item" onclick="tradeStock(\'' + e[0] + '\')"><div class="item-icon"><span class="material-icons">trending_up</span></div><div class="item-info"><div class="item-name">' + e[0] + '</div><div class="item-sub">' + e[1] + ' pcs · ' + (e[1] * (s ? s.price : 0)).toLocaleString() + ' RUB</div></div></div>'; }).join('') : '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No stocks</p>'; }
+    
+    var pc = document.getElementById('portfolioContent'); if (pc) { var totalPF = getTotalAssets(); pc.innerHTML = '<div class="detail-row"><p style="color:var(--text-secondary);margin-bottom:4px;">Total Value</p><p style="font-size:28px;font-weight:700;">' + totalPF.toLocaleString() + ' RUB</p></div><div class="list-item"><div class="item-icon"><span class="material-icons">home</span></div><div class="item-info"><div class="item-name">RUB Account</div></div><div class="item-amount plus">' + balance.toLocaleString() + ' RUB</div></div>'; }
 }
 </script>
 
 <script>
-function showCardDetail() {
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">RUB Account</div><div class="profile-phone"><div class="phone-label">Phone Number</div><div class="phone-number">' + phoneNumber + '</div></div><div class="detail-row"><p>Card: ' + cardNumber + '</p><p>Balance: ' + balance.toLocaleString() + ' RUB</p></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Close</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-}
+function showCardDetail() { var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Account Details</div><div class="phone-box"><div class="label">Phone Number</div><div class="phone">' + phoneNumber + '</div></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Card<span>' + cardNumber + '</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;">Balance<span class="green">' + balance.toLocaleString() + ' RUB</span></p></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Close</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); }
 
-function showProfile() {
-    checkDailyReset();
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profile</div><div class="profile-phone"><div class="phone-label">Your Phone</div><div class="phone-number">' + phoneNumber + '</div></div><div class="detail-row"><p>Name: ' + playerName + '</p><p>Card: ' + cardNumber + '</p><p>Balance: ' + balance.toLocaleString() + ' RUB</p>' + (isDeveloper ? '<p style="color:#ffaa00;">DEV MODE ACTIVE</p>' : '') + '</div><div class="limit-info">Daily: Top-ups ' + dailyTopUpCount.toLocaleString() + '/' + maxDailyTopUp.toLocaleString() + ' | Transfers ' + dailyTransferCount.toLocaleString() + '/' + maxDailyTransfers.toLocaleString() + '</div><button class="btn btn-primary" onclick="openTopUp();this.closest(\'.modal-overlay\').remove();">Top Up</button><button class="btn btn-blue" onclick="openTransfer();this.closest(\'.modal-overlay\').remove();">Transfer</button><button class="btn btn-secondary" onclick="showSubMenu();this.closest(\'.modal-overlay\').remove();">' + (hasSubscription ? 'Subscription Active' : 'Subscribe') + '</button><button class="btn btn-gold" onclick="showDevInput();this.closest(\'.modal-overlay\').remove();">' + (isDeveloper ? 'Dev Mode: ON' : 'Developer Code') + '</button><button class="btn btn-secondary" onclick="passMonth();this.closest(\'.modal-overlay\').remove();">Skip Month</button><button class="btn btn-secondary" onclick="logout();this.closest(\'.modal-overlay\').remove();">Logout</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-}
+function showProfile() { checkDailyReset(); var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profile</div><div class="phone-box"><div class="label">Your Phone</div><div class="phone">' + phoneNumber + '</div></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Name<span>' + playerName + '</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;">Balance<span class="green">' + balance.toLocaleString() + ' RUB</span></p>' + (isDeveloper ? '<p style="color:#ffaa00;margin-top:8px;">DEV MODE ACTIVE</p>' : '') + '</div><div class="limit-box">Daily: Top-ups ' + dailyTopUpCount.toLocaleString() + '/' + maxDailyTopUp.toLocaleString() + ' · Transfers ' + dailyTransferCount.toLocaleString() + '/' + maxDailyTransfers.toLocaleString() + '</div><button class="btn btn-primary" onclick="openTopUp();this.closest(\'.modal-overlay\').remove();">Top Up</button><button class="btn btn-blue" onclick="openTransfer();this.closest(\'.modal-overlay\').remove();">Transfer</button><button class="btn btn-secondary" onclick="showSubMenu();this.closest(\'.modal-overlay\').remove();">' + (hasSubscription ? 'Subscription Active' : 'Subscribe (5000 RUB)') + '</button><button class="btn btn-gold" onclick="showDevInput();this.closest(\'.modal-overlay\').remove();">' + (isDeveloper ? 'Dev Mode: ON' : 'Developer Code') + '</button><button class="btn btn-secondary" onclick="passMonth();this.closest(\'.modal-overlay\').remove();">Skip Month</button><button class="btn btn-secondary" onclick="logout();this.closest(\'.modal-overlay\').remove();">Logout</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); }
 
-function showSubMenu() {
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Subscription</div>' + (hasSubscription ? '<p style="text-align:center;color:#34c759;">Active</p><button class="btn btn-danger" onclick="if(confirm(\'Cancel subscription?\')){hasSubscription=false;saveData();showToast(\'Cancelled\');this.closest(\'.modal-overlay\').remove();}">Cancel Subscription</button>' : '<p style="text-align:center;">5 000 RUB/month</p><p style="text-align:center;color:var(--text-secondary);font-size:12px;">Removes all daily limits</p><button class="btn btn-primary" onclick="if(balance>=5000){balance-=5000;hasSubscription=true;addHistory(\'Subscription\',5000,\'minus\',\'RUB\');saveData();showToast(\'Subscribed!\');this.closest(\'.modal-overlay\').remove();}else{showToast(\'Not enough money\');}">Subscribe</button>') + '<button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-}
+function showSubMenu() { var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Subscription</div>' + (hasSubscription ? '<p style="text-align:center;color:#34c759;margin:16px 0;">Active</p><button class="btn btn-danger" onclick="if(confirm(\'Cancel subscription?\')){hasSubscription=false;saveData();showToast(\'Cancelled\');this.closest(\'.modal-overlay\').remove();}">Cancel Subscription</button>' : '<p style="text-align:center;margin:16px 0;">5 000 RUB / month</p><button class="btn btn-primary" onclick="if(balance>=5000){balance-=5000;hasSubscription=true;addHistory(\'Subscription\',5000,\'minus\',\'RUB\');saveData();showToast(\'Subscribed!\');this.closest(\'.modal-overlay\').remove();}">Subscribe</button>') + '<button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); }
 
-function showDevInput() {
-    if (isDeveloper) { isDeveloper = false; saveData(); showToast('Dev mode OFF'); document.getElementById('devBadge').style.display = 'none'; updateUI(); return; }
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Developer Code</div><p style="text-align:center;color:var(--text-secondary);font-size:12px;margin-bottom:12px;">Enter the secret code</p><div class="input-group"><div class="input-label">Code</div><input class="input-field" id="devCodeInput" placeholder="Enter code" type="password" autocomplete="off"></div><button class="btn btn-gold" id="devCodeBtn">Activate</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('devCodeBtn').onclick = function() {
-        var code = document.getElementById('devCodeInput').value.trim();
-        if (code === _d) { isDeveloper = true; saveData(); showToast('DEV MODE ON!'); document.getElementById('devBadge').style.display = 'inline'; ov.remove(); updateUI(); }
-        else { showToast('Wrong code!'); }
-    };
-}
+function showDevInput() { if (isDeveloper) { isDeveloper = false; saveData(); showToast('Dev mode OFF'); document.getElementById('devBadge').style.display = 'none'; updateUI(); return; } var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Developer Code</div><p style="text-align:center;color:var(--text-secondary);font-size:13px;margin-bottom:14px;">Enter secret code to unlock</p><div class="input-group"><input class="input-field" id="devCodeInput" placeholder="Enter code" type="password" autocomplete="off" style="text-align:center;"></div><button class="btn btn-gold" id="devCodeBtn">Activate</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('devCodeBtn').onclick = function() { var code = document.getElementById('devCodeInput').value; if (code === _d) { isDeveloper = true; saveData(); showToast('DEV MODE ON!'); document.getElementById('devBadge').style.display = 'inline'; ov.remove(); updateUI(); } else { showToast('Wrong code!'); } }; }
 
-function logout() {
-    if (confirm('Logout? Data saved locally.')) {
-        isLoggedIn = false; pageHistory = ['home'];
-        document.querySelectorAll('.page').forEach(function(x) { x.classList.remove('active'); });
-        document.getElementById('pageLogin').classList.add('active');
-        document.getElementById('bottomNav').style.display = 'none';
-        document.getElementById('devBadge').style.display = 'none';
-    }
-}
+function logout() { if (confirm('Logout? Data saved locally.')) { isLoggedIn = false; pageHistory = ['home']; document.querySelectorAll('.page').forEach(function(x) { x.classList.remove('active'); }); document.getElementById('pageLogin').style.display = 'flex'; document.getElementById('bottomNav').style.display = 'none'; document.getElementById('devBadge').style.display = 'none'; } }
 
-function openTopUp() {
-    checkDailyReset();
-    var remaining = isDeveloper ? 'Unlimited (DEV)' : (maxDailyTopUp - dailyTopUpCount).toLocaleString() + ' RUB';
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Top Up</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><div class="limit-info">Remaining today: ' + remaining + '</div><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="topAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="topBtn">Top Up</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('topBtn').onclick = function() {
-        var a = parseInt(document.getElementById('topAmt').value);
-        if (a > 0) { if (!isDeveloper && !canTopUp(a)) return; balance += a; if (!isDeveloper) dailyTopUpCount += a; addHistory('Top Up', a, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); showToast('+' + a.toLocaleString() + ' RUB'); }
-    };
-}
+function openTopUp() { checkDailyReset(); var rem = isDeveloper ? 'Unlimited' : (maxDailyTopUp - dailyTopUpCount).toLocaleString() + ' RUB'; var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Top Up</div><div class="balance-box"><div class="label">Current Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><div class="limit-box">Remaining today: ' + rem + '</div><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="topAmt" placeholder="0" style="text-align:center;font-size:20px;"></div><button class="btn btn-primary" id="topBtn">Top Up</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('topBtn').onclick = function() { var a = parseInt(document.getElementById('topAmt').value); if (a > 0) { if (!isDeveloper && !canTopUp(a)) return; balance += a; if (!isDeveloper) dailyTopUpCount += a; addHistory('Top Up', a, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); showToast('+' + a.toLocaleString() + ' RUB'); } }; }
 
-function openTransfer() {
-    checkDailyReset();
-    var remaining = isDeveloper ? 'Unlimited (DEV)' : (maxDailyTransfers - dailyTransferCount).toLocaleString() + ' RUB';
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Transfer</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><div class="limit-info">Remaining today: ' + remaining + '</div><div class="input-group"><div class="input-label">Receiver Phone</div><input class="input-field" id="tPhone" placeholder="+7..."></div><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="tAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="tBtn">Send</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('tBtn').onclick = function() {
-        var a = parseInt(document.getElementById('tAmt').value);
-        var p = document.getElementById('tPhone').value.trim();
-        if (a > 0 && p && balance >= a) {
-            if (p === phoneNumber) { showToast('Cannot transfer to yourself'); return; }
-            if (!isDeveloper && !canTransfer(a)) return;
-            balance -= a; if (!isDeveloper) dailyTransferCount += a;
-            addHistory('Transfer to ' + p, a, 'minus', 'RUB');
-            saveData(); ov.remove(); updateUI();
-            showToast('Sent ' + a.toLocaleString() + ' RUB');
-        }
-    };
-}
+function openTransfer() { checkDailyReset(); var rem = isDeveloper ? 'Unlimited' : (maxDailyTransfers - dailyTransferCount).toLocaleString() + ' RUB'; var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Transfer</div><div class="balance-box"><div class="label">Available Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><div class="limit-box">Remaining today: ' + rem + '</div><div class="input-group"><div class="input-label">Receiver Phone</div><input class="input-field" id="tPhone" placeholder="+79001234567" style="text-align:center;"></div><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="tAmt" placeholder="0" style="text-align:center;font-size:20px;"></div><button class="btn btn-primary" id="tBtn">Send Transfer</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('tBtn').onclick = function() { var a = parseInt(document.getElementById('tAmt').value); var p = document.getElementById('tPhone').value.trim(); if (a > 0 && p && balance >= a) { if (p === phoneNumber) { showToast('Cannot transfer to yourself'); return; } if (!isDeveloper && !canTransfer(a)) return; balance -= a; if (!isDeveloper) dailyTransferCount += a; addHistory('Transfer to ' + p, a, 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); showToast('Sent ' + a.toLocaleString() + ' RUB'); } }; }
 
-function openDepositType(index) {
-    var d = depositTypes[index];
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + d.name + ' Deposit</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><p>' + d.rate + '% per year | ' + d.desc + '</p><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="depAmt" placeholder="0" min="1"></div><button class="btn btn-primary" id="depBtn">Open Deposit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('depBtn').onclick = function() {
-        var a = parseInt(document.getElementById('depAmt').value);
-        if (a > 0 && balance >= a) {
-            balance -= a;
-            depositAccounts.push({type: d.name, amount: a, rate: d.rate, date: new Date().toLocaleDateString(), history: []});
-            addHistory('Deposit: ' + d.name, a, 'minus', 'RUB');
-            saveData(); ov.remove(); updateUI();
-            showToast('Deposit opened! +' + Math.floor(a * d.rate / 12 / 100).toLocaleString() + ' RUB/mo');
-        }
-    };
-}
+function openDepositType(index) { var d = depositTypes[index]; var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + d.name + ' Deposit</div><div class="balance-box"><div class="label">Available Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><p style="text-align:center;margin-bottom:12px;">' + d.rate + '% per year · ' + d.desc + '</p><div class="input-group"><div class="input-label">Amount (RUB)</div><input class="input-field" type="number" id="depAmt" placeholder="0" style="text-align:center;font-size:20px;"></div><button class="btn btn-primary" id="depBtn">Open Deposit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Cancel</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('depBtn').onclick = function() { var a = parseInt(document.getElementById('depAmt').value); if (a > 0 && balance >= a) { balance -= a; depositAccounts.push({type: d.name, amount: a, rate: d.rate, date: new Date().toLocaleDateString(), history: []}); addHistory('Deposit: ' + d.name, a, 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); showToast('Deposit opened! +' + Math.floor(a * d.rate / 12 / 100).toLocaleString() + ' RUB/mo'); } }; }
 
-function showDepositDetail(index) {
-    var d = depositAccounts[index];
-    var mi = Math.floor(d.amount * d.rate / 12 / 100);
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + d.type + '</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><div class="detail-row"><p>Amount: ' + d.amount.toLocaleString() + ' RUB</p><p>Rate: ' + d.rate + '%</p><p style="color:#34c759;">Monthly income: +' + mi.toLocaleString() + ' RUB</p><p>Opened: ' + d.date + '</p></div><button class="btn btn-green" id="addBtn">Top Up</button><button class="btn btn-danger" id="closeBtn">Close Deposit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Back</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('addBtn').onclick = function() {
-        var a = parseInt(prompt('Amount (RUB): Available ' + balance.toLocaleString()));
-        if (a > 0 && balance >= a) { balance -= a; d.amount += a; addHistory('Deposit top-up', a, 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); showDepositDetail(index); }
-    };
-    document.getElementById('closeBtn').onclick = function() {
-        if (confirm('Close deposit? +' + d.amount.toLocaleString() + ' RUB returned')) { balance += d.amount; depositAccounts.splice(index, 1); addHistory('Deposit closed', d.amount, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); }
-    };
-}
+function showDepositDetail(index) { var d = depositAccounts[index]; var mi = Math.floor(d.amount * d.rate / 12 / 100); var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + d.type + '</div><div class="balance-box"><div class="label">Available Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Amount<span>' + d.amount.toLocaleString() + ' RUB</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;">Rate<span>' + d.rate + '%</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;" class="green">Monthly<span>+' + mi.toLocaleString() + ' RUB</span></p></div><button class="btn btn-green" id="addBtn">Top Up Deposit</button><button class="btn btn-danger" id="closeBtn">Close Deposit</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Back</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('addBtn').onclick = function() { var a = parseInt(prompt('Amount (RUB): Available ' + balance.toLocaleString())); if (a > 0 && balance >= a) { balance -= a; d.amount += a; addHistory('Deposit top-up', a, 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); showDepositDetail(index); } }; document.getElementById('closeBtn').onclick = function() { if (confirm('Close deposit? +' + d.amount.toLocaleString() + ' RUB returned')) { balance += d.amount; depositAccounts.splice(index, 1); addHistory('Deposit closed', d.amount, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); } }; }
 
-function showAssetDetail(type, symbol) {
-    var hold, price, name, unit = '';
-    if (type === 'crypto') { var c = cryptoListData.find(function(x) { return x.symbol === symbol; }); hold = cryptoHoldings[symbol] || 0; price = c.price; name = c.name; }
-    else if (type === 'forex') { var f = forexListData.find(function(x) { return x.symbol === symbol; }); hold = forexHoldings[symbol] || 0; price = f.price; name = f.name; }
-    else { hold = metalHoldings[symbol] || 0; price = METAL_PRICES[symbol]; name = symbol; unit = ' g'; }
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + name + '</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><div class="detail-row"><p>Owned: ' + hold + unit + ' | Price: ' + price.toLocaleString() + ' RUB</p></div><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="qty" placeholder="0" step="0.0001"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="sum" placeholder="0"></div></div><button class="btn btn-green" id="buyBtn">Buy</button><button class="btn btn-primary" id="sellBtn">Sell</button><button class="btn btn-blue" id="incBtn">Profit/Loss</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('qty').oninput = function() { var q = parseFloat(this.value) || 0; document.getElementById('sum').value = (q * price).toFixed(2); };
-    document.getElementById('sum').oninput = function() { var s = parseFloat(this.value) || 0; document.getElementById('qty').value = (s / price).toFixed(6); };
-    document.getElementById('buyBtn').onclick = function() {
-        var q = parseFloat(document.getElementById('qty').value) || 0;
-        if (q > 0 && balance >= q * price) {
-            balance -= q * price;
-            if (!assetPriceHistory[type + '_' + symbol]) assetPriceHistory[type + '_' + symbol] = price;
-            if (type === 'crypto') cryptoHoldings[symbol] = (cryptoHoldings[symbol] || 0) + q;
-            else if (type === 'forex') forexHoldings[symbol] = (forexHoldings[symbol] || 0) + q;
-            else metalHoldings[symbol] = (metalHoldings[symbol] || 0) + q;
-            addHistory('Buy ' + symbol, Math.floor(q * price), 'minus', 'RUB');
-            saveData(); ov.remove(); updateUI();
-        }
-    };
-    document.getElementById('sellBtn').onclick = function() {
-        var q = parseFloat(document.getElementById('qty').value) || 0;
-        if (q > 0 && hold >= q) {
-            balance += q * price;
-            if (type === 'crypto') cryptoHoldings[symbol] -= q;
-            else if (type === 'forex') forexHoldings[symbol] -= q;
-            else metalHoldings[symbol] -= q;
-            addHistory('Sell ' + symbol, Math.floor(q * price), 'plus', 'RUB');
-            saveData(); ov.remove(); updateUI();
-        }
-    };
-    document.getElementById('incBtn').onclick = function() {
-        var op = assetPriceHistory[type + '_' + symbol] || price;
-        var inc = Math.round((price - op) * hold);
-        var pov = document.createElement('div'); pov.className = 'modal-overlay';
-        pov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profit/Loss: ' + symbol + '</div><div class="detail-row"><span>Buy price</span><span style="float:right;">' + op.toLocaleString() + ' RUB</span></div><div class="detail-row"><span>Now</span><span style="float:right;">' + price.toLocaleString() + ' RUB</span></div><div class="detail-row"><span>Profit/Loss</span><span style="color:' + (inc >= 0 ? '#34c759' : '#e60000') + ';float:right;font-weight:700;">' + (inc >= 0 ? '+' : '') + inc.toLocaleString() + ' RUB</span></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-        document.body.appendChild(pov);
-        pov.addEventListener('click', function(e) { if (e.target === pov) pov.remove(); });
-    };
-}
+function showAssetDetail(type, symbol) { var hold, price, name, unit = ''; if (type === 'crypto') { var c = cryptoListData.find(function(x) { return x.symbol === symbol; }); hold = cryptoHoldings[symbol] || 0; price = c.price; name = c.name; } else if (type === 'forex') { var f = forexListData.find(function(x) { return x.symbol === symbol; }); hold = forexHoldings[symbol] || 0; price = f.price; name = f.name; } else { hold = metalHoldings[symbol] || 0; price = METAL_PRICES[symbol]; name = symbol; unit = ' g'; } var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + name + '</div><div class="balance-box"><div class="label">Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Owned<span>' + hold + unit + '</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;">Price<span>' + price.toLocaleString() + ' RUB</span></p></div><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="qty" placeholder="0" step="0.0001" style="text-align:center;"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="sum" placeholder="0" style="text-align:center;"></div></div><button class="btn btn-green" id="buyBtn">Buy</button><button class="btn btn-primary" id="sellBtn">Sell</button><button class="btn btn-blue" id="incBtn">Profit / Loss</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('qty').oninput = function() { var q = parseFloat(this.value) || 0; document.getElementById('sum').value = (q * price).toFixed(2); }; document.getElementById('sum').oninput = function() { var s = parseFloat(this.value) || 0; document.getElementById('qty').value = (s / price).toFixed(6); }; document.getElementById('buyBtn').onclick = function() { var q = parseFloat(document.getElementById('qty').value) || 0; if (q > 0 && balance >= q * price) { balance -= q * price; if (!assetPriceHistory[type + '_' + symbol]) assetPriceHistory[type + '_' + symbol] = price; if (type === 'crypto') cryptoHoldings[symbol] = (cryptoHoldings[symbol] || 0) + q; else if (type === 'forex') forexHoldings[symbol] = (forexHoldings[symbol] || 0) + q; else metalHoldings[symbol] = (metalHoldings[symbol] || 0) + q; addHistory('Buy ' + symbol, Math.floor(q * price), 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); } }; document.getElementById('sellBtn').onclick = function() { var q = parseFloat(document.getElementById('qty').value) || 0; if (q > 0 && hold >= q) { balance += q * price; if (type === 'crypto') cryptoHoldings[symbol] -= q; else if (type === 'forex') forexHoldings[symbol] -= q; else metalHoldings[symbol] -= q; addHistory('Sell ' + symbol, Math.floor(q * price), 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); } }; document.getElementById('incBtn').onclick = function() { var op = assetPriceHistory[type + '_' + symbol] || price; var inc = Math.round((price - op) * hold); var pov = document.createElement('div'); pov.className = 'modal-overlay'; pov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profit / Loss</div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Buy price<span>' + op.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Current<span>' + price.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;font-weight:700;">Result<span style="color:' + (inc >= 0 ? '#34c759' : '#e60000') + ';">' + (inc >= 0 ? '+' : '') + inc.toLocaleString() + ' RUB</span></p></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(pov); pov.addEventListener('click', function(e) { if (e.target === pov) pov.remove(); }); }; }
 
-function tradeStock(symbol) {
-    var s = stockListData.find(function(x) { return x.symbol === symbol; });
-    var hold = stockHoldings[symbol] || 0;
-    var ov = document.createElement('div'); ov.className = 'modal-overlay';
-    ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + s.name + '</div><div class="available-balance"><div class="avail-label">Balance</div><div class="avail-amount">' + balance.toLocaleString() + ' RUB</div></div><p>Price: ' + s.price.toLocaleString() + ' RUB | Own: ' + hold + ' pcs</p><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="sqty" placeholder="0"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="ssum" placeholder="0"></div></div><button class="btn btn-green" id="sbuyBtn">Buy</button><button class="btn btn-primary" id="ssellBtn">Sell</button><button class="btn btn-blue" id="sincBtn">Profit/Loss</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-    document.getElementById('sqty').oninput = function() { var q = parseInt(this.value) || 0; document.getElementById('ssum').value = (q * s.price).toFixed(0); };
-    document.getElementById('ssum').oninput = function() { var sm = parseInt(this.value) || 0; document.getElementById('sqty').value = Math.floor(sm / s.price); };
-    document.getElementById('sbuyBtn').onclick = function() {
-        var q = parseInt(document.getElementById('sqty').value) || 0;
-        if (q > 0 && balance >= q * s.price) {
-            balance -= q * s.price;
-            if (!assetPriceHistory['stock_' + symbol]) assetPriceHistory['stock_' + symbol] = s.price;
-            stockHoldings[symbol] = (stockHoldings[symbol] || 0) + q;
-            addHistory('Buy stock ' + symbol, q * s.price, 'minus', 'RUB');
-            saveData(); ov.remove(); updateUI();
-        }
-    };
-    document.getElementById('ssellBtn').onclick = function() {
-        var q = parseInt(document.getElementById('sqty').value) || 0;
-        if (q > 0 && hold >= q) { balance += q * s.price; stockHoldings[symbol] -= q; addHistory('Sell stock ' + symbol, q * s.price, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); }
-    };
-    document.getElementById('sincBtn').onclick = function() {
-        var op = assetPriceHistory['stock_' + symbol] || s.price;
-        var inc = Math.round((s.price - op) * hold);
-        var pov = document.createElement('div'); pov.className = 'modal-overlay';
-        pov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profit/Loss: ' + symbol + '</div><div class="detail-row"><span>Buy price</span><span style="float:right;">' + op.toLocaleString() + ' RUB</span></div><div class="detail-row"><span>Now</span><span style="float:right;">' + s.price.toLocaleString() + ' RUB</span></div><div class="detail-row"><span>Profit/Loss</span><span style="color:' + (inc >= 0 ? '#34c759' : '#e60000') + ';float:right;font-weight:700;">' + (inc >= 0 ? '+' : '') + inc.toLocaleString() + ' RUB</span></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>';
-        document.body.appendChild(pov);
-        pov.addEventListener('click', function(e) { if (e.target === pov) pov.remove(); });
-    };
-}
+function tradeStock(symbol) { var s = stockListData.find(function(x) { return x.symbol === symbol; }), hold = stockHoldings[symbol] || 0; var ov = document.createElement('div'); ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">' + s.name + '</div><div class="balance-box"><div class="label">Balance</div><div class="amount">' + balance.toLocaleString() + ' RUB</div></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Price<span>' + s.price.toLocaleString() + ' RUB</span></p><p style="display:flex;justify-content:space-between;margin-top:8px;">Owned<span>' + hold + ' pcs</span></p></div><div class="input-row"><div class="input-group"><div class="input-label">Qty</div><input class="input-field" type="number" id="sqty" placeholder="0" style="text-align:center;"></div><div class="input-group"><div class="input-label">Sum RUB</div><input class="input-field" type="number" id="ssum" placeholder="0" style="text-align:center;"></div></div><button class="btn btn-green" id="sbuyBtn">Buy</button><button class="btn btn-primary" id="ssellBtn">Sell</button><button class="btn btn-blue" id="sincBtn">Profit / Loss</button><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(ov); ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); }); document.getElementById('sqty').oninput = function() { var q = parseInt(this.value) || 0; document.getElementById('ssum').value = (q * s.price).toFixed(0); }; document.getElementById('ssum').oninput = function() { var sm = parseInt(this.value) || 0; document.getElementById('sqty').value = Math.floor(sm / s.price); }; document.getElementById('sbuyBtn').onclick = function() { var q = parseInt(document.getElementById('sqty').value) || 0; if (q > 0 && balance >= q * s.price) { balance -= q * s.price; if (!assetPriceHistory['stock_' + symbol]) assetPriceHistory['stock_' + symbol] = s.price; stockHoldings[symbol] = (stockHoldings[symbol] || 0) + q; addHistory('Buy stock ' + symbol, q * s.price, 'minus', 'RUB'); saveData(); ov.remove(); updateUI(); } }; document.getElementById('ssellBtn').onclick = function() { var q = parseInt(document.getElementById('sqty').value) || 0; if (q > 0 && hold >= q) { balance += q * s.price; stockHoldings[symbol] -= q; addHistory('Sell stock ' + symbol, q * s.price, 'plus', 'RUB'); saveData(); ov.remove(); updateUI(); } }; document.getElementById('sincBtn').onclick = function() { var op = assetPriceHistory['stock_' + symbol] || s.price; var inc = Math.round((s.price - op) * hold); var pov = document.createElement('div'); pov.className = 'modal-overlay'; pov.innerHTML = '<div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">Profit / Loss</div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Buy price<span>' + op.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;">Current<span>' + s.price.toLocaleString() + ' RUB</span></p></div><div class="detail-row"><p style="display:flex;justify-content:space-between;font-weight:700;">Result<span style="color:' + (inc >= 0 ? '#34c759' : '#e60000') + ';">' + (inc >= 0 ? '+' : '') + inc.toLocaleString() + ' RUB</span></p></div><button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove();">Close</button></div>'; document.body.appendChild(pov); pov.addEventListener('click', function(e) { if (e.target === pov) pov.remove(); }); }; }
 
 init();
 </script>
 </body>
 </html>
+
